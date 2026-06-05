@@ -229,16 +229,17 @@
 
   /* Returns a data-URI SVG thumbnail with a descriptive label. */
   function placeholderImage(label, icon, crown) {
-    var stroke = crown ? '#E31E26' : '#5a6066';
-    var bg = crown ? '#fdecec' : '#eef1f3';
+    // Hatched "blueprint" placeholder with a faint icon watermark + uppercase label.
+    var stroke = crown ? '#e32613' : '#7a8590';
     var draw = (ICONS[icon] || ICONS.bottle)(stroke);
-    var short = label.length > 24 ? label.slice(0, 23) + '…' : label;
+    var short = (label.length > 26 ? label.slice(0, 25) + '…' : label).toUpperCase();
     var svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' role='img'>" +
-      "<rect width='200' height='200' fill='" + bg + "'/>" +
-      "<rect x='8' y='8' width='184' height='184' rx='12' fill='#ffffff' stroke='#e2e6e9' stroke-width='2'/>" +
-      draw +
-      "<text x='100' y='172' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12' fill='#5a6066'>" + escapeXml(short) + "</text>" +
+      "<defs><pattern id='hatch' width='28' height='28' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>" +
+      "<rect width='28' height='28' fill='#e9ebee'/><rect width='14' height='28' fill='#e2e5e9'/></pattern></defs>" +
+      "<rect width='200' height='200' fill='url(#hatch)'/>" +
+      "<g opacity='0.5'>" + draw + "</g>" +
+      "<text x='100' y='178' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='11' font-weight='700' letter-spacing='1.6' fill='#9aa3ac'>" + escapeXml(short) + "</text>" +
       "</svg>";
     return 'data:image/svg+xml,' + encodeURIComponent(svg);
   }
