@@ -1,0 +1,2168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#2d2d2d" />
+  <title>Roy Turk Industrial Sales Ltd. — Janitorial &amp; Industrial Supplies | GTA</title>
+  <meta name="description" content="Toronto's premier janitorial & industrial supplies distributor since 1968. Authorized Karcher dealer. Crown Chemical house brand. Free next-business-day delivery across the GTA. 3,600+ products." />
+  <!-- 100% standalone static prototype — no backend, no external CDNs, no live API/Magento/DDI/WordPress integration. -->
+  <link rel="preconnect" href="" />
+  <style>
+/* =================================================================
+   Roy Turk Industrial Sales Ltd. — B2B landing page prototype
+   Plain CSS, no frameworks. Mobile-first, responsive, accessible.
+   -----------------------------------------------------------------
+   Brand tokens are defined once in :root so they're easy to re-skin.
+   ================================================================= */
+
+:root {
+  /* Brand palette */
+  --rt-red: #E31E26;          /* Roy Turk red — white text on this = ~4.7:1 (AA) */
+  --rt-red-dark: #b9151c;
+  --rt-red-tint: #fdecec;
+  --rt-charcoal: #4A4A4A;     /* secondary dark gray */
+  --rt-ink: #1f1f1f;          /* body text */
+  --rt-header: #2d2d2d;       /* dark charcoal header (Amazon-style) */
+  --rt-header-2: #3f3f3f;     /* secondary nav bar */
+  --rt-bg: #F3F3F3;           /* light gray page background */
+  --rt-white: #ffffff;
+  --rt-border: #d8d8d8;
+  --rt-border-2: #e6e6e6;
+  --rt-muted: #6b6b6b;
+  --rt-link: #086a9c;         /* utility links (B2B blue) */
+  --rt-yellow: #FFD814;       /* Amazon-style sign-in/CTA yellow */
+  --rt-yellow-dark: #f4ca12;
+  --rt-green: #0a7d33;        /* delivery / success */
+
+  /* Type */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Spacing / shape */
+  --radius: 8px;
+  --radius-sm: 5px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.08);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.12);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,.22);
+  --maxw: 1500px;
+  --header-h: 102px;          /* updated by JS to the real header height */
+  --focus: 0 0 0 3px rgba(227,30,38,.45);
+}
+
+/* ----------------------------- Reset ---------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--rt-ink);
+  background: var(--rt-bg);
+}
+h1, h2, h3, h4, p, ul, figure { margin: 0; }
+ul { list-style: none; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+input, select, textarea { font: inherit; }
+
+/* Visible focus for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--rt-red);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.utility-bar :focus-visible,
+.catnav :focus-visible,
+.hero :focus-visible { outline-color: #fff; }
+
+/* --------------------------- Utilities -------------------------- */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; top: -60px; left: 12px; z-index: 1200;
+  background: var(--rt-red); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 var(--radius) var(--radius); font-weight: 700;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 0; }
+
+.page { max-width: var(--maxw); margin: 0 auto; padding: 0 14px 40px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; min-height: 44px; padding: 0 20px;
+  border: 1px solid transparent; border-radius: 22px;
+  font-weight: 700; font-size: 15px; line-height: 1;
+  text-align: center; transition: background .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--rt-red); color: #fff; }
+.btn--primary:hover { background: var(--rt-red-dark); }
+.btn--yellow { background: var(--rt-yellow); color: #1a1a1a; border-color: #e3b800; }
+.btn--yellow:hover { background: var(--rt-yellow-dark); }
+.btn--outline { background: #fff; color: var(--rt-red); border-color: var(--rt-red); }
+.btn--outline:hover { background: var(--rt-red-tint); }
+.btn--lg { min-height: 50px; padding: 0 28px; font-size: 16px; }
+.btn--block { width: 100%; }
+
+/* Badges & chips */
+.badge {
+  display: inline-block; padding: 4px 10px; border-radius: 20px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase;
+}
+.badge--karcher { background: var(--rt-yellow); color: #2d2d2d; }
+.badge--crown { background: var(--rt-red); color: #fff; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; border: 1px solid var(--rt-red); color: var(--rt-red);
+  padding: 5px 12px; border-radius: 18px; font-weight: 700; font-size: 13px;
+}
+.chip button {
+  border: 0; background: var(--rt-red); color: #fff; width: 18px; height: 18px;
+  border-radius: 50%; line-height: 1; font-size: 13px; display: grid; place-items: center;
+}
+
+/* =================================================================
+   HEADER — utility bar + category nav
+   ================================================================= */
+.site-header { position: sticky; top: 0; z-index: 900; }
+.site-header.is-stuck .utility-bar { box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+
+.utility-bar { background: var(--rt-header); color: #fff; }
+.utility-bar__inner {
+  max-width: var(--maxw); margin: 0 auto;
+  display: flex; align-items: center; gap: 14px;
+  padding: 8px 14px; flex-wrap: wrap;
+}
+
+/* Brand */
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: var(--radius); flex: 0 0 auto; }
+.brand:hover { outline: 1px solid #5a5a5a; }
+.brand__mark { display: grid; place-items: center; }
+.brand__text { display: flex; flex-direction: column; line-height: 1; }
+.brand__name { color: var(--rt-red); font-weight: 900; font-size: 19px; letter-spacing: .5px; }
+.brand__sub { color: #cfcfcf; font-size: 11px; font-weight: 600; margin-top: 2px; }
+
+/* Delivery strip */
+.deliver { display: flex; align-items: center; gap: 8px; color: #fff; padding: 4px 6px; border-radius: var(--radius); flex: 0 0 auto; }
+.deliver:hover { outline: 1px solid #5a5a5a; }
+.deliver__pin { color: var(--rt-red); flex: 0 0 auto; }
+.deliver__text { display: flex; flex-direction: column; line-height: 1.2; }
+.deliver__small { font-size: 11px; color: #cfcfcf; }
+.deliver__big { font-size: 13px; font-weight: 700; }
+
+/* Search */
+.search {
+  position: relative; display: flex; align-items: stretch;
+  flex: 1 1 420px; min-width: 240px; height: 42px;
+  background: #fff; border-radius: var(--radius); overflow: visible;
+  box-shadow: 0 0 0 2px transparent; transition: box-shadow .15s ease;
+}
+.search:focus-within { box-shadow: 0 0 0 3px var(--rt-yellow); }
+.search__cat { position: relative; display: flex; }
+.search__select {
+  height: 100%; border: 0; background: #eaeaea; color: #333;
+  padding: 0 26px 0 12px; border-radius: var(--radius) 0 0 var(--radius);
+  font-size: 12.5px; font-weight: 600; cursor: pointer; max-width: 140px;
+  -webkit-appearance: none; appearance: none;
+  border-right: 1px solid #d4d4d4;
+}
+.search__cat::after {
+  content: ""; position: absolute; right: 9px; top: 50%; width: 7px; height: 7px;
+  border-right: 2px solid #555; border-bottom: 2px solid #555;
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
+.search__input {
+  flex: 1 1 auto; min-width: 0; border: 0; padding: 0 12px;
+  font-size: 15px; color: #111; background: #fff;
+}
+.search__input::placeholder { color: #767676; }
+.search__btn {
+  flex: 0 0 auto; width: 48px; border: 0; background: var(--rt-red); color: #fff;
+  border-radius: 0 var(--radius) var(--radius) 0; display: grid; place-items: center;
+}
+.search__btn:hover { background: var(--rt-red-dark); }
+
+/* Live search results dropdown */
+.search__results {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 60;
+  background: #fff; color: var(--rt-ink); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); border: 1px solid var(--rt-border);
+  max-height: 60vh; overflow-y: auto; padding: 6px;
+}
+.search__result {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 8px 10px; border-radius: var(--radius-sm); text-align: left;
+  border: 0; background: transparent;
+}
+.search__result:hover, .search__result.is-active { background: #f0f3f5; }
+.search__result img { width: 42px; height: 42px; border-radius: 6px; border: 1px solid var(--rt-border-2); flex: 0 0 auto; }
+.search__result-name { font-weight: 600; font-size: 14px; }
+.search__result-meta { font-size: 12px; color: var(--rt-muted); }
+.search__result mark { background: #fff3b0; color: inherit; border-radius: 2px; }
+.search__empty { padding: 18px 12px; text-align: center; color: var(--rt-muted); font-size: 14px; }
+.search__viewall {
+  display: block; width: 100%; text-align: center; padding: 10px; margin-top: 4px;
+  border: 0; border-top: 1px solid var(--rt-border-2); background: transparent;
+  color: var(--rt-link); font-weight: 700; font-size: 13.5px;
+}
+.search__viewall:hover { text-decoration: underline; }
+
+/* Account cluster */
+.acct { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; margin-left: auto; }
+.acct__item {
+  display: flex; flex-direction: column; line-height: 1.2; padding: 6px 8px;
+  border-radius: var(--radius); border: 1px solid transparent; min-height: 44px; justify-content: center;
+}
+.acct__item:hover { border-color: #5a5a5a; }
+.acct__line1 { font-size: 11px; color: #d8d8d8; }
+.acct__line2 { font-size: 13px; font-weight: 700; }
+.quote-btn {
+  display: flex; align-items: flex-end; gap: 4px; background: transparent; border: 1px solid transparent;
+  color: #fff; padding: 6px 8px; border-radius: var(--radius); min-height: 44px;
+}
+.quote-btn:hover { border-color: #5a5a5a; }
+.quote-btn__icon { position: relative; display: block; color: #fff; }
+.quote-btn__count {
+  position: absolute; top: -6px; right: -8px; background: var(--rt-red); color: #fff;
+  min-width: 20px; height: 20px; padding: 0 5px; border-radius: 11px;
+  font-size: 12px; font-weight: 800; display: grid; place-items: center; line-height: 1;
+  border: 2px solid var(--rt-header); transition: transform .15s ease;
+}
+.quote-btn__count.is-bump { transform: scale(1.35); }
+.quote-btn__label { font-size: 13px; font-weight: 700; line-height: 1.05; text-align: left; }
+
+.mobile-menu-btn { display: none; background: transparent; border: 1px solid #5a5a5a; color: #fff; border-radius: var(--radius); padding: 8px; min-height: 44px; min-width: 44px; }
+
+/* Category nav */
+.catnav { background: var(--rt-header-2); color: #fff; }
+.catnav__inner {
+  max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 4px;
+  padding: 4px 10px; overflow-x: auto; scrollbar-width: thin;
+}
+.catnav__inner::-webkit-scrollbar { height: 6px; }
+.catnav__inner::-webkit-scrollbar-thumb { background: #5e5e5e; border-radius: 3px; }
+.catnav__all {
+  display: inline-flex; align-items: center; gap: 6px; background: transparent;
+  border: 1px solid transparent; color: #fff; font-weight: 700; padding: 8px 10px;
+  border-radius: var(--radius); white-space: nowrap; min-height: 40px;
+}
+.catnav__all:hover { border-color: #6a6a6a; }
+.catnav__list { display: flex; align-items: center; gap: 2px; }
+.catnav__list a {
+  display: inline-block; padding: 8px 10px; border-radius: var(--radius);
+  font-size: 13.5px; white-space: nowrap; color: #ededed; border: 1px solid transparent;
+}
+.catnav__list a:hover { border-color: #6a6a6a; color: #fff; }
+.catnav__crown { color: #ffd9da !important; font-weight: 700; }
+.catnav__special { color: var(--rt-yellow) !important; font-weight: 700; }
+.catnav__phone {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+  font-weight: 700; font-size: 14px; color: #fff; white-space: nowrap; padding: 8px 10px;
+}
+.catnav__phone:hover { color: var(--rt-yellow); }
+
+/* =================================================================
+   HERO CAROUSEL
+   ================================================================= */
+.hero { position: relative; background: linear-gradient(180deg, #fff 0%, #fafafa 60%, var(--rt-bg) 100%); }
+.hero__viewport { position: relative; max-width: var(--maxw); margin: 0 auto; min-height: 340px; }
+.hero__track { position: relative; }
+.hero__slide {
+  display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 20px;
+  padding: 40px 70px 88px; min-height: 340px;
+}
+.hero__slide[hidden] { display: none; }
+.hero__slide { animation: heroFade .5s ease; }
+@keyframes heroFade { from { opacity: 0; } to { opacity: 1; } }
+.hero__eyebrow { color: var(--rt-red); font-weight: 800; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; margin-bottom: 10px; }
+.hero__title { font-size: clamp(26px, 4vw, 44px); line-height: 1.08; font-weight: 900; color: var(--rt-ink); max-width: 14ch; }
+.hero__sub { margin-top: 14px; font-size: clamp(15px, 1.6vw, 18px); color: var(--rt-charcoal); max-width: 42ch; }
+.hero__cta { margin-top: 22px; }
+.hero__media { display: grid; place-items: center; }
+.hero__art { width: 100%; max-width: 360px; height: auto; }
+
+.hero__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 46px; height: 64px; background: rgba(255,255,255,.85); border: 1px solid var(--rt-border);
+  border-radius: var(--radius); display: grid; place-items: center; color: #333;
+  box-shadow: var(--shadow-sm); z-index: 5;
+}
+.hero__arrow:hover { background: #fff; box-shadow: var(--shadow-md); }
+.hero__arrow--prev { left: 10px; }
+.hero__arrow--next { right: 10px; }
+.hero__dots { position: absolute; bottom: 58px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 11; }
+.hero__dots button {
+  width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--rt-charcoal);
+  background: transparent; padding: 0;
+}
+.hero__dots button[aria-selected="true"] { background: var(--rt-red); border-color: var(--rt-red); }
+.hero__fade { height: 0; }
+
+/* =================================================================
+   CARD ROWS (white cards on gray)
+   ================================================================= */
+.card-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin: 18px 0;
+}
+.card-row--overlap { margin-top: -44px; position: relative; z-index: 10; }
+
+.ux-card {
+  background: #fff; border-radius: var(--radius); padding: 16px;
+  box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+  border: 1px solid var(--rt-border-2);
+}
+.ux-card__title { font-size: 18px; font-weight: 800; margin-bottom: 12px; color: var(--rt-ink); }
+.ux-card__copy { font-size: 13.5px; color: var(--rt-charcoal); margin-bottom: 12px; }
+.ux-card__link { margin-top: auto; color: var(--rt-link); font-weight: 700; font-size: 13.5px; padding-top: 10px; }
+.ux-card__link:hover { color: var(--rt-red); text-decoration: underline; }
+
+.mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.mini-grid__cell { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--rt-charcoal); }
+.mini-grid__cell:hover { color: var(--rt-red); }
+.mini-grid__art {
+  aspect-ratio: 1 / 1; border-radius: var(--radius-sm); background: #f1f3f5 center/46% no-repeat;
+  border: 1px solid var(--rt-border-2);
+}
+.mini-grid__cell:hover .mini-grid__art { border-color: var(--rt-red); }
+
+/* Glyphs for mini-grid + card heroes (decorative, charcoal line icons) */
+.mini-grid__art--office { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M4 21V9l8-5 8 5v12'/%3E%3Cpath d='M9 21v-5h6v5'/%3E%3Cpath d='M8 11h1.5M14.5 11H16M8 14.5h1.5M14.5 14.5H16'/%3E%3C/svg%3E"); }
+.mini-grid__art--resto { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3v7M6 10v11M4 3v5M8 3v5M17 3c-1.6 0-2.6 2-2.6 5.5S15.4 14 17 14v7'/%3E%3C/svg%3E"); }
+.mini-grid__art--health { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E31E26' stroke-width='1.8' stroke-linejoin='round'%3E%3Crect x='4' y='4' width='16' height='16' rx='3'/%3E%3Cpath d='M12 8v8M8 12h8'/%3E%3C/svg%3E"); }
+.mini-grid__art--ware { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Crect x='3' y='10' width='8' height='8'/%3E%3Crect x='13' y='10' width='8' height='8'/%3E%3Crect x='8' y='4' width='8' height='6'/%3E%3C/svg%3E"); }
+.mini-grid__art--degrease { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M9 8h5l1 3v9a1 1 0 01-1 1H9a1 1 0 01-1-1v-9z'/%3E%3Cpath d='M9 8V5h3M12 5h5M12 8V5'/%3E%3C/svg%3E"); }
+.mini-grid__art--floor { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 3l-9 9M5 14l5 5M4 20l3-3'/%3E%3Cpath d='M14 5l5 5'/%3E%3C/svg%3E"); }
+.mini-grid__art--disinfect { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E31E26' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V6z'/%3E%3Cpath d='M9.5 12l1.8 1.8L15 10' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.mini-grid__art--soap { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Crect x='8' y='9' width='8' height='12' rx='2'/%3E%3Cpath d='M10 9V6h4M14 6h2v2M10 6L8.5 4.5'/%3E%3C/svg%3E"); }
+.mini-grid__art--paper { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Crect x='5' y='6' width='14' height='12' rx='2'/%3E%3Cellipse cx='5' cy='12' rx='2' ry='6'/%3E%3Cpath d='M19 12h2'/%3E%3C/svg%3E"); }
+.mini-grid__art--bag { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M7 7h10l-1 13a1 1 0 01-1 1H9a1 1 0 01-1-1z'/%3E%3Cpath d='M8 7c0-2 1.5-3 4-3s4 1 4 3'/%3E%3C/svg%3E"); }
+.mini-grid__art--sanitizer { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E31E26' stroke-width='1.6' stroke-linejoin='round'%3E%3Crect x='8' y='10' width='8' height='11' rx='2'/%3E%3Cpath d='M10 10V7h4v3M11 4c1 1.4 1 2.4 0 3M14 3.5c1.2 1.6 1.2 2.8 0 4'/%3E%3C/svg%3E"); }
+.mini-grid__art--glove { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M7 21v-7l-1-2a1.4 1.4 0 012.6-1l.4 1V5a1.3 1.3 0 012.6 0v4a1.3 1.3 0 012.6 0v1a1.3 1.3 0 012.6 0v6a4 4 0 01-1.5 3v2z'/%3E%3C/svg%3E"); }
+
+.ux-card__hero {
+  display: block; aspect-ratio: 16 / 9; border-radius: var(--radius-sm); margin: 4px 0 12px;
+  background: #f1f3f5; border: 1px solid var(--rt-border-2); overflow: hidden; position: relative;
+}
+.ux-card__hero-art { display: block; width: 100%; height: 100%; background: center/40% no-repeat; }
+.ux-card__hero-art--machine { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.4' stroke-linejoin='round'%3E%3Crect x='7' y='6' width='9' height='9' rx='2'/%3E%3Ccircle cx='9.5' cy='18' r='2'/%3E%3Ccircle cx='14' cy='18' r='2'/%3E%3Cpath d='M16 8q4-1 4 4'/%3E%3C/svg%3E"); background-size: 46%; }
+.ux-card__hero-art--hygiene { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.4' stroke-linejoin='round'%3E%3Crect x='8' y='10' width='8' height='11' rx='2'/%3E%3Cpath d='M10 10V7h4v3M10 7L8.5 5.5M14 7l1.5-1.5'/%3E%3C/svg%3E"); background-size: 40%; }
+.ux-card__hero-art--paper { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.4' stroke-linejoin='round'%3E%3Crect x='5' y='6' width='14' height='12' rx='2'/%3E%3Cellipse cx='5' cy='12' rx='2' ry='6'/%3E%3C/svg%3E"); background-size: 46%; }
+.ux-card__hero-art--new { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E31E26' stroke-width='1.4' stroke-linejoin='round'%3E%3Cpath d='M12 3l2 5 5 .5-3.8 3.4 1.2 5L12 19l-4.6 2 1.2-5L4.8 8.5 10 8z'/%3E%3C/svg%3E"); background-size: 44%; }
+.ux-card__hero-tag { position: absolute; top: 8px; left: 8px; background: var(--rt-red); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 12px; }
+
+.ux-card__list { margin-bottom: 10px; }
+.ux-card__list li { font-size: 13.5px; padding: 3px 0; }
+.ux-card__list a { color: var(--rt-charcoal); }
+.ux-card__list a:hover { color: var(--rt-red); text-decoration: underline; }
+.ux-card--signin .ux-card__btn { margin-bottom: 14px; }
+.ux-card__newcust { font-size: 13px; color: var(--rt-charcoal); }
+.ux-card__newcust a { color: var(--rt-link); font-weight: 700; }
+.ux-card__newcust a:hover { color: var(--rt-red); text-decoration: underline; }
+
+/* =================================================================
+   PANELS (products / categories) — white card on gray
+   ================================================================= */
+.panel { background: #fff; border-radius: var(--radius); padding: 18px; margin: 18px 0; box-shadow: var(--shadow-sm); border: 1px solid var(--rt-border-2); }
+.panel__head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.panel__title { font-size: 22px; font-weight: 900; color: var(--rt-ink); }
+.panel__seeall { margin-left: auto; color: var(--rt-link); font-weight: 700; font-size: 14px; }
+.panel__seeall:hover { color: var(--rt-red); text-decoration: underline; }
+.panel__filter { display: flex; align-items: center; }
+
+/* Product carousel */
+.carousel { position: relative; }
+.carousel__track {
+  display: flex; gap: 14px; overflow-x: auto; scroll-behavior: smooth;
+  scroll-snap-type: x mandatory; padding: 4px 2px 14px;
+  scrollbar-width: thin;
+}
+.carousel__track.is-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  overflow: visible; scroll-snap-type: none;
+}
+.carousel__track::-webkit-scrollbar { height: 8px; }
+.carousel__track::-webkit-scrollbar-thumb { background: #cfcfcf; border-radius: 4px; }
+.carousel__arrow {
+  position: absolute; top: 38%; transform: translateY(-50%); z-index: 6;
+  width: 42px; height: 56px; background: #fff; border: 1px solid var(--rt-border);
+  border-radius: var(--radius); display: grid; place-items: center; box-shadow: var(--shadow-md); color: #333;
+}
+.carousel__arrow:hover { background: #f7f7f7; }
+.carousel__arrow--prev { left: -6px; }
+.carousel__arrow--next { right: -6px; }
+.carousel__track.is-grid ~ .carousel__arrow { display: none; }
+
+/* Product card */
+.product {
+  scroll-snap-align: start; flex: 0 0 210px; width: 210px;
+  background: #fff; border: 1px solid var(--rt-border-2); border-radius: var(--radius);
+  padding: 12px; display: flex; flex-direction: column;
+}
+.carousel__track.is-grid .product { flex: initial; width: auto; }
+.product:hover { box-shadow: var(--shadow-md); border-color: var(--rt-border); }
+.product__imgwrap { position: relative; aspect-ratio: 1 / 1; background: #f6f7f8; border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 10px; }
+.product__img { width: 100%; height: 100%; object-fit: contain; }
+.product__brandtag { position: absolute; top: 8px; left: 8px; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; background: rgba(255,255,255,.92); border: 1px solid var(--rt-border-2); padding: 2px 7px; border-radius: 10px; color: var(--rt-charcoal); }
+.product--crown .product__brandtag { background: var(--rt-red); color: #fff; border-color: var(--rt-red); }
+.product__name { font-size: 14px; font-weight: 700; line-height: 1.25; color: var(--rt-ink); margin-bottom: 6px; min-height: 2.5em; }
+.product__sizes { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+.product__size { font-size: 11px; font-weight: 700; color: var(--rt-charcoal); background: #eef0f2; border-radius: 4px; padding: 2px 7px; }
+.product__case { font-size: 11.5px; color: var(--rt-green); font-weight: 700; margin-bottom: 4px; display: inline-flex; align-items: center; gap: 5px; }
+.product__price { font-size: 12.5px; color: var(--rt-muted); margin-bottom: 10px; }
+.product__price a { color: var(--rt-link); font-weight: 700; }
+.product__price a:hover { color: var(--rt-red); text-decoration: underline; }
+.product__btn { margin-top: auto; }
+.product__btn .btn { width: 100%; min-height: 40px; border-radius: 20px; font-size: 13.5px; }
+
+.panel__empty { padding: 30px; text-align: center; color: var(--rt-muted); }
+.panel__empty .btn { margin-top: 12px; }
+
+/* =================================================================
+   BRAND STRIP
+   ================================================================= */
+.brand-strip { margin: 18px 0; text-align: center; }
+.brand-strip__title { font-size: 14px; font-weight: 700; color: var(--rt-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+.brand-strip__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.brand-strip__list li {
+  background: #fff; border: 1px solid var(--rt-border-2); border-radius: var(--radius);
+  padding: 12px 18px; font-weight: 800; color: var(--rt-charcoal); font-size: 15px;
+  min-width: 120px; box-shadow: var(--shadow-sm);
+}
+.brand-strip__list li.is-crown { color: #fff; background: var(--rt-red); border-color: var(--rt-red); }
+
+/* =================================================================
+   TRUST BAND
+   ================================================================= */
+.trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; background: #fff; border-radius: var(--radius); padding: 26px 18px; margin: 18px 0; box-shadow: var(--shadow-sm); border: 1px solid var(--rt-border-2); }
+.trust__col { text-align: center; padding: 0 8px; }
+.trust__icon { display: inline-grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--rt-red-tint); color: var(--rt-red); margin-bottom: 10px; }
+.trust__head { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.trust__copy { font-size: 13px; color: var(--rt-charcoal); }
+.trust__col + .trust__col { border-left: 1px solid var(--rt-border-2); }
+
+/* =================================================================
+   CROWN SPOTLIGHT
+   ================================================================= */
+.spotlight { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: center; background: #fff; border-radius: var(--radius); padding: 30px; margin: 18px 0; box-shadow: var(--shadow-sm); border: 1px solid var(--rt-border-2); }
+.spotlight__title { font-size: clamp(22px, 2.6vw, 30px); font-weight: 900; margin: 12px 0; }
+.spotlight__copy { color: var(--rt-charcoal); font-size: 15px; max-width: 56ch; }
+.spotlight__points { margin: 16px 0; }
+.spotlight__points li { position: relative; padding: 4px 0 4px 28px; font-size: 14.5px; color: var(--rt-ink); }
+.spotlight__points li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 12px; height: 12px; border-radius: 50%; background: var(--rt-red); }
+.spotlight__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.spotlight__media { border-radius: var(--radius); overflow: hidden; }
+.spotlight__art { width: 100%; height: auto; }
+
+/* =================================================================
+   CATEGORY TILE GRID
+   ================================================================= */
+.cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.cat-tile {
+  display: flex; flex-direction: column; gap: 10px; background: #fff;
+  border: 1px solid var(--rt-border-2); border-radius: var(--radius); padding: 12px; text-align: left;
+}
+.cat-tile:hover { box-shadow: var(--shadow-md); border-color: var(--rt-red); }
+.cat-tile__img { aspect-ratio: 1 / 1; width: 100%; border-radius: var(--radius-sm); background: #f3f5f7; object-fit: cover; }
+.cat-tile__name { font-size: 14px; font-weight: 700; color: var(--rt-ink); }
+.cat-tile:hover .cat-tile__name { color: var(--rt-red); }
+
+/* =================================================================
+   QUOTE CTA BAND (red)
+   ================================================================= */
+.quote-cta { background: var(--rt-red); color: #fff; }
+.quote-cta__inner { max-width: var(--maxw); margin: 0 auto; padding: 30px 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.quote-cta__text { flex: 1 1 420px; }
+.quote-cta__title { font-size: clamp(20px, 2.4vw, 28px); font-weight: 900; }
+.quote-cta__sub { margin-top: 8px; font-size: 15px; color: #ffe3e4; max-width: 70ch; }
+.quote-cta__actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.quote-cta__phone { display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; color: #fff; }
+.quote-cta__phone:hover { color: var(--rt-yellow); }
+
+/* =================================================================
+   FOOTER
+   ================================================================= */
+.footer { background: var(--rt-header); color: #d6d6d6; margin-top: 10px; }
+.footer__top { display: block; width: 100%; background: var(--rt-header-2); color: #fff; border: 0; padding: 14px; font-size: 13.5px; font-weight: 600; }
+.footer__top:hover { background: #4a4a4a; }
+.footer__cols { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 36px 16px; }
+.footer__head { color: #fff; font-size: 15px; margin-bottom: 12px; }
+.footer__col ul li { padding: 5px 0; }
+.footer__col a, .footer__linkbtn { color: #cfcfcf; font-size: 13.5px; background: none; border: 0; padding: 0; }
+.footer__col a:hover, .footer__linkbtn:hover { color: #fff; text-decoration: underline; }
+.footer__bar { border-top: 1px solid #4a4a4a; padding: 20px 16px; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.footer__brand { display: flex; align-items: center; gap: 10px; }
+.footer__brand-text { font-size: 14px; color: #eee; }
+.footer__brand-text strong { color: var(--rt-red); font-weight: 900; letter-spacing: .5px; }
+.footer__meta, .footer__legal { font-size: 12.5px; color: #b3b3b3; }
+.footer__meta a, .footer__legal a { color: #cfcfcf; }
+.footer__meta a:hover, .footer__legal a:hover { color: #fff; text-decoration: underline; }
+.footer__legal span { color: #9a9a9a; }
+
+/* =================================================================
+   OVERLAYS — backdrop, mega menu, quote panel, modal, toast
+   ================================================================= */
+.backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 950; opacity: 0; transition: opacity .2s ease; }
+.backdrop.is-open { opacity: 1; }
+.backdrop[hidden] { display: none; }
+
+/* Mega menu (left slide-in) */
+.mega {
+  position: fixed; top: 0; left: 0; bottom: 0; width: min(365px, 86vw); z-index: 1000;
+  background: #fff; box-shadow: var(--shadow-lg); transform: translateX(-100%);
+  transition: transform .25s ease; display: flex; flex-direction: column;
+}
+.mega[hidden] { display: none; }
+.mega.is-open { transform: translateX(0); }
+.mega__head { background: var(--rt-header); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 16px; }
+.mega__title { font-weight: 800; font-size: 16px; }
+.mega__close, .quote-panel__close { background: transparent; border: 0; color: inherit; font-size: 30px; line-height: 1; width: 40px; height: 40px; border-radius: 6px; }
+.mega__close:hover, .quote-panel__close:hover { background: rgba(255,255,255,.15); }
+.mega__body { overflow-y: auto; padding: 8px 0 24px; }
+.mega__group { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--rt-muted); padding: 14px 18px 6px; }
+.mega__list li a { display: block; padding: 11px 18px; font-size: 14.5px; color: var(--rt-ink); border-bottom: 1px solid #f1f1f1; }
+.mega__list li a:hover { background: var(--rt-red-tint); color: var(--rt-red); }
+
+/* Quote panel (right slide-out) */
+.quote-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw); z-index: 1000;
+  background: #fff; box-shadow: var(--shadow-lg); transform: translateX(100%);
+  transition: transform .25s ease; display: flex; flex-direction: column;
+}
+.quote-panel[hidden] { display: none; }
+.quote-panel.is-open { transform: translateX(0); }
+.quote-panel__head { background: var(--rt-header); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 16px; }
+.quote-panel__title { font-size: 17px; font-weight: 800; }
+.quote-panel__count { color: #cfcfcf; font-weight: 600; }
+.quote-panel__body { flex: 1 1 auto; overflow-y: auto; padding: 8px 14px; }
+.quote-panel__foot { border-top: 1px solid var(--rt-border-2); padding: 14px; background: #fafafa; }
+.quote-panel__note { font-size: 12px; color: var(--rt-muted); margin-bottom: 10px; }
+
+.q-empty { text-align: center; color: var(--rt-muted); padding: 50px 16px; }
+.q-empty svg { margin: 0 auto 12px; color: #c9c9c9; }
+.q-empty .btn { margin-top: 14px; }
+
+.q-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--rt-border-2); }
+.q-item__img { width: 60px; height: 60px; border-radius: 6px; border: 1px solid var(--rt-border-2); flex: 0 0 auto; object-fit: contain; background: #f6f7f8; }
+.q-item__main { flex: 1 1 auto; min-width: 0; }
+.q-item__name { font-size: 14px; font-weight: 700; }
+.q-item__meta { font-size: 12px; color: var(--rt-muted); margin: 2px 0 8px; }
+.q-item__controls { display: flex; align-items: center; gap: 12px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--rt-border); border-radius: 18px; overflow: hidden; }
+.stepper button { width: 32px; height: 32px; border: 0; background: #f3f3f3; color: var(--rt-ink); font-size: 17px; line-height: 1; }
+.stepper button:hover { background: #e7e7e7; }
+.stepper span { min-width: 32px; text-align: center; font-weight: 700; font-size: 14px; }
+.q-item__remove { background: none; border: 0; color: var(--rt-link); font-size: 12.5px; font-weight: 700; }
+.q-item__remove:hover { color: var(--rt-red); text-decoration: underline; }
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: 16px; }
+.modal[hidden] { display: none; }
+.modal__panel { position: relative; background: #fff; border-radius: var(--radius); width: min(560px, 100%); max-height: 92vh; overflow-y: auto; padding: 28px; box-shadow: var(--shadow-lg); animation: modalIn .2s ease; }
+@keyframes modalIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal__close { position: absolute; top: 10px; right: 12px; background: none; border: 0; font-size: 30px; line-height: 1; color: var(--rt-muted); width: 40px; height: 40px; border-radius: 6px; }
+.modal__close:hover { background: #f0f0f0; color: var(--rt-ink); }
+.modal__title { font-size: 24px; font-weight: 900; }
+.modal__sub { color: var(--rt-charcoal); margin: 8px 0 18px; font-size: 14.5px; }
+.modal__form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; grid-column: 1 / -1; }
+.field--half { grid-column: span 1; }
+.field label { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; }
+.field input, .field textarea { border: 1px solid var(--rt-border); border-radius: 6px; padding: 11px 12px; font-size: 15px; background: #fff; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--rt-red); box-shadow: var(--focus); }
+.field.is-invalid input, .field.is-invalid textarea { border-color: var(--rt-red); background: #fff7f7; }
+.field__error { color: var(--rt-red); font-size: 12.5px; font-weight: 600; margin-top: 5px; min-height: 1em; }
+.modal__form .btn { grid-column: 1 / -1; margin-top: 4px; }
+.modal__disclaimer { grid-column: 1 / -1; font-size: 12px; color: var(--rt-muted); text-align: center; margin: 0; }
+.modal__success { text-align: center; padding: 20px 8px; }
+.modal__check { display: inline-block; margin-bottom: 12px; }
+.modal__success h3 { font-size: 22px; margin-bottom: 8px; }
+.modal__success p { color: var(--rt-charcoal); margin-bottom: 18px; }
+
+/* Toast */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+  background: var(--rt-ink); color: #fff; padding: 13px 20px; border-radius: 26px;
+  font-weight: 600; font-size: 14px; z-index: 1200; box-shadow: var(--shadow-lg);
+  opacity: 0; transition: opacity .2s ease, transform .2s ease; max-width: 90vw; text-align: center;
+  display: flex; align-items: center; gap: 10px;
+}
+.toast[hidden] { display: none; }
+.toast.is-open { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast::before { content: "✓"; display: grid; place-items: center; width: 22px; height: 22px; background: var(--rt-green); color: #fff; border-radius: 50%; font-size: 13px; font-weight: 800; }
+
+/* =================================================================
+   RESPONSIVE
+   ================================================================= */
+@media (max-width: 1180px) {
+  .card-row { grid-template-columns: repeat(2, 1fr); }
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 1023px) {
+  .deliver { display: none; }
+  .acct__item--reorder { display: none; }
+  .catnav { display: none; }
+  .mobile-menu-btn { display: inline-grid; place-items: center; }
+  .utility-bar__inner { gap: 8px; }
+  .hero__slide { grid-template-columns: 1fr; padding: 26px 56px 82px; text-align: center; }
+  .hero__title { max-width: none; }
+  .hero__sub { margin-left: auto; margin-right: auto; }
+  .hero__media { display: none; }
+  .spotlight { grid-template-columns: 1fr; }
+  .spotlight__media { order: -1; max-width: 460px; }
+}
+@media (max-width: 767px) {
+  body { font-size: 14px; }
+  .utility-bar__inner { row-gap: 10px; }
+  .brand { order: 1; }
+  .acct { order: 2; }
+  .mobile-menu-btn { order: 3; }
+  .search { order: 4; flex-basis: 100%; }
+  .acct__item { padding: 6px 4px; }
+  .card-row, .card-row--overlap { grid-template-columns: 1fr; }
+  .card-row--overlap { margin-top: -30px; }
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust { grid-template-columns: 1fr 1fr; row-gap: 22px; }
+  .trust__col:nth-child(odd) { border-left: 0; }
+  .trust__col:nth-child(3) { border-left: 0; }
+  .footer__cols { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .panel__title { font-size: 19px; }
+  .hero__arrow { width: 38px; height: 52px; }
+  .modal__form { grid-template-columns: 1fr; }
+  .field--half { grid-column: 1 / -1; }
+  .quote-cta__inner { padding: 24px 16px; }
+}
+@media (max-width: 460px) {
+  .acct__item { display: none; }
+  .brand__sub { display: none; }
+  .footer__cols { grid-template-columns: 1fr; }
+  .trust { grid-template-columns: 1fr; }
+  .trust__col + .trust__col { border-left: 0; border-top: 1px solid var(--rt-border-2); padding-top: 18px; }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .carousel__track { scroll-behavior: auto; }
+}
+
+</style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23fff'/%3E%3Cpath d='M16 4 l2.2 6.4 6.6-2.1-2.6 5.9 6 1.4-5.1 3.7 2.6 5.6-6.9-2 0.6 7.3-3.9-4-3.9 4 0.6-7.3-6.9 2 2.6-5.6-5.1-3.7 6-1.4-2.6-5.9 6.6 2.1z' fill='%23E31E26'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ============================================================= -->
+  <!-- HEADER (sticky): utility bar + category navigation            -->
+  <!-- ============================================================= -->
+  <header class="site-header" id="siteHeader">
+    <!-- ---- Top utility bar (dark charcoal, Amazon-style) ---- -->
+    <div class="utility-bar">
+      <div class="utility-bar__inner">
+
+        <!-- LOGO: replace this text/SVG lockup with the real Roy Turk logo file (e.g., assets/logo.svg). -->
+        <a class="brand" href="#top" aria-label="Roy Turk Industrial Sales Ltd. — home">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="40" height="40" role="img" aria-hidden="true">
+              <circle cx="24" cy="24" r="23" fill="#ffffff" stroke="#E31E26" stroke-width="2"/>
+              <path d="M24 6 l3.2 9.3 9.6-3-3.7 8.6 8.7 2-7.4 5.4 3.8 8.1-10-2.9 0.9 10.6-5.7-5.8-5.7 5.8 0.9-10.6-10 2.9 3.8-8.1-7.4-5.4 8.7-2-3.7-8.6 9.6 3z" fill="#E31E26"/>
+            </svg>
+          </span>
+          <span class="brand__text">
+            <span class="brand__name">ROY TURK</span>
+            <span class="brand__sub">Industrial Sales Ltd.</span>
+          </span>
+        </a>
+
+        <!-- Delivery / location strip -->
+        <a class="deliver" href="#trust" aria-label="Delivery information">
+          <svg class="deliver__pin" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2c-3.9 0-7 3.1-7 7 0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" fill="currentColor"/></svg>
+          <span class="deliver__text">
+            <span class="deliver__small">Delivering FREE next-day to</span>
+            <span class="deliver__big">the GTA · Etobicoke &amp; area</span>
+          </span>
+        </a>
+
+        <!-- Search: category dropdown + input + red button -->
+        <form class="search" id="searchForm" role="search" autocomplete="off" aria-label="Product search">
+          <div class="search__cat">
+            <label class="visually-hidden" for="searchCat">Search within category</label>
+            <select id="searchCat" class="search__select" aria-label="Search within category">
+              <option value="All">All</option>
+              <option value="Chemicals">Chemicals</option>
+              <option value="Paper">Paper</option>
+              <option value="Garbage Bags">Garbage Bags</option>
+              <option value="Skin Care">Skin Care</option>
+              <option value="Equipment">Equipment</option>
+              <option value="Floor Machines">Floor Machines</option>
+              <option value="Wipers">Wipers &amp; Microfiber</option>
+              <option value="Safety">Safety</option>
+              <option value="Dispensers">Dispensers</option>
+              <option value="Shipping">Shipping</option>
+            </select>
+          </div>
+          <label class="visually-hidden" for="searchInput">Search products</label>
+          <input id="searchInput" class="search__input" type="search" name="q"
+                 placeholder="Search 3,600+ janitorial &amp; industrial products…"
+                 role="combobox" aria-expanded="false" aria-controls="searchResults"
+                 aria-autocomplete="list" aria-label="Search products" />
+          <button class="search__btn" type="submit" aria-label="Search">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M21 21l-4.3-4.3m1.8-4.7a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </button>
+          <!-- Live search results (populated by app.js) -->
+          <div id="searchResults" class="search__results" role="listbox" aria-label="Search suggestions" hidden></div>
+        </form>
+
+        <!-- Account / reorder / quote cart -->
+        <nav class="acct" aria-label="Account and quote cart">
+          <a class="acct__item" href="#" data-toast="Sign-in is disabled in this prototype.">
+            <span class="acct__line1">Hello, Sign in</span>
+            <span class="acct__line2">Account &amp; Quotes ▾</span>
+          </a>
+          <a class="acct__item acct__item--reorder" href="#" data-toast="Order history is disabled in this prototype.">
+            <span class="acct__line1">Reorder</span>
+            <span class="acct__line2">Order History</span>
+          </a>
+          <button class="quote-btn" id="openQuote" type="button" aria-haspopup="dialog" aria-label="Open quote cart, 0 items">
+            <span class="quote-btn__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30"><path d="M3 4h2l2.2 11.2a2 2 0 002 1.6h7.7a2 2 0 002-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.6" fill="currentColor"/><circle cx="18" cy="20" r="1.6" fill="currentColor"/></svg>
+              <span class="quote-btn__count" id="quoteCount" aria-hidden="true">0</span>
+            </span>
+            <span class="quote-btn__label">Quote<br>Cart</span>
+          </button>
+        </nav>
+
+        <!-- Mobile hamburger (shown on small screens) -->
+        <button class="mobile-menu-btn" id="openMenuMobile" type="button" aria-label="Open menu" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ---- Category navigation bar (slim dark bar) ---- -->
+    <nav class="catnav" aria-label="Product categories">
+      <div class="catnav__inner">
+        <button class="catnav__all" id="openMenu" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="megaMenu">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          All
+        </button>
+        <ul class="catnav__list">
+          <li><a href="#products" data-cat="Cleaning Chemicals">Cleaning Chemicals</a></li>
+          <li><a href="#products" data-cat="Crown Chemical Brand" class="catnav__crown">Crown Chemical Brand</a></li>
+          <li><a href="#products" data-cat="Paper Products">Paper Products</a></li>
+          <li><a href="#products" data-cat="Garbage Bags & Liners">Garbage Bags &amp; Liners</a></li>
+          <li><a href="#products" data-cat="Skin Care & Hand Hygiene">Skin Care &amp; Hand Hygiene</a></li>
+          <li><a href="#products" data-cat="Karcher Equipment">Karcher Equipment</a></li>
+          <li><a href="#products" data-cat="Floor Machines">Floor Machines</a></li>
+          <li><a href="#products" data-cat="Wipers & Microfiber">Wipers &amp; Microfiber</a></li>
+          <li class="catnav__hide-md"><a href="#products" data-cat="Safety Supplies">Safety Supplies</a></li>
+          <li class="catnav__hide-md"><a href="#products" data-cat="Shipping Supplies">Shipping Supplies</a></li>
+          <li class="catnav__hide-md"><a href="#products" data-cat="Dispensers">Dispensers</a></li>
+          <li><a href="#products" data-cat="Monthly Specials" class="catnav__special">Monthly Specials</a></li>
+        </ul>
+        <!-- PHONE: 416-744-9000 is a placeholder — swap the tel: href and visible text. -->
+        <a class="catnav__phone" href="tel:+14167449000">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11.4 11.4 0 003.6.6 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.4 11.4 0 00.6 3.6 1 1 0 01-.24 1z" fill="currentColor"/></svg>
+          416-744-9000
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <h1 class="visually-hidden">Roy Turk Industrial Sales Ltd. — janitorial &amp; industrial supplies for the GTA since 1968</h1>
+
+    <!-- ============================================================= -->
+    <!-- 3. HERO CAROUSEL                                              -->
+    <!-- ============================================================= -->
+    <section class="hero" id="top" aria-roledescription="carousel" aria-label="Featured promotions">
+      <div class="hero__viewport" id="heroViewport">
+        <div class="hero__track" id="heroTrack">
+
+          <!-- Slide 1 -->
+          <article class="hero__slide hero__slide--equip is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: Karcher equipment" id="heroSlide0">
+            <div class="hero__content">
+              <p class="hero__eyebrow">Authorized Karcher Dealer</p>
+              <h2 class="hero__title">Keep Your Facility Spotless</h2>
+              <p class="hero__sub">Shop Karcher pressure washers &amp; floor scrubbers built for industrial workloads.</p>
+              <a class="btn btn--primary hero__cta" href="#products" data-cat="Karcher Equipment">Shop Equipment</a>
+            </div>
+            <div class="hero__media" aria-hidden="true">
+              <!-- IMAGE PLACEHOLDER: Karcher pressure washer / floor scrubber photo -->
+              <svg viewBox="0 0 320 220" width="320" height="220" class="hero__art">
+                <rect x="40" y="150" width="240" height="14" rx="7" fill="#cfd3d6"/>
+                <rect x="120" y="60" width="120" height="92" rx="10" fill="#FFD814"/>
+                <rect x="120" y="60" width="120" height="26" rx="10" fill="#E31E26"/>
+                <text x="180" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="sans-serif">KARCHER</text>
+                <circle cx="150" cy="150" r="18" fill="#2d2d2d"/><circle cx="210" cy="150" r="18" fill="#2d2d2d"/>
+                <circle cx="150" cy="150" r="7" fill="#9a9a9a"/><circle cx="210" cy="150" r="7" fill="#9a9a9a"/>
+                <rect x="150" y="96" width="60" height="40" rx="6" fill="#3a3f44"/>
+                <path d="M240 70 q40 -10 50 26" fill="none" stroke="#4A4A4A" stroke-width="6" stroke-linecap="round"/>
+                <rect x="286" y="92" width="10" height="34" rx="5" fill="#2d2d2d"/>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Slide 2 -->
+          <article class="hero__slide hero__slide--crown" role="group" aria-roledescription="slide" aria-label="2 of 4: Crown Chemical house brand" id="heroSlide1" hidden>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Our House Brand</p>
+              <h2 class="hero__title">Crown Chemical: Industrial Strength, Better Pricing</h2>
+              <p class="hero__sub">Manufactured in-house for 60+ years — exclusive formulas, better margins for you.</p>
+              <a class="btn btn--primary hero__cta" href="#crown-spotlight">Explore Crown Chemical</a>
+            </div>
+            <div class="hero__media" aria-hidden="true">
+              <!-- IMAGE PLACEHOLDER: Crown Chemical pail line-up -->
+              <svg viewBox="0 0 320 220" width="320" height="220" class="hero__art">
+                <ellipse cx="160" cy="196" rx="120" ry="14" fill="#dadee1"/>
+                <g>
+                  <path d="M70 96 h70 l-8 96 h-54 z" fill="#E31E26"/>
+                  <rect x="66" y="86" width="78" height="16" rx="6" fill="#b5141a"/>
+                  <rect x="78" y="120" width="54" height="40" rx="4" fill="#fff"/>
+                  <text x="105" y="145" text-anchor="middle" font-size="14" font-weight="800" fill="#E31E26" font-family="sans-serif">CROWN</text>
+                </g>
+                <g>
+                  <path d="M150 110 h84 l-9 82 h-66 z" fill="#4A4A4A"/>
+                  <rect x="146" y="100" width="92" height="16" rx="6" fill="#333"/>
+                  <rect x="162" y="132" width="60" height="40" rx="4" fill="#fff"/>
+                  <text x="192" y="157" text-anchor="middle" font-size="14" font-weight="800" fill="#4A4A4A" font-family="sans-serif">CROWN</text>
+                </g>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Slide 3 -->
+          <article class="hero__slide hero__slide--deliver" role="group" aria-roledescription="slide" aria-label="3 of 4: Free next-day delivery" id="heroSlide2" hidden>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Serving the GTA since 1968</p>
+              <h2 class="hero__title">Free Next-Day Delivery Across the GTA</h2>
+              <p class="hero__sub">Order today, stocked tomorrow. Family-owned and local for 55+ years.</p>
+              <a class="btn btn--primary hero__cta" href="#quote-cta" data-open-modal="quote">Request an Account</a>
+            </div>
+            <div class="hero__media" aria-hidden="true">
+              <!-- IMAGE PLACEHOLDER: delivery truck -->
+              <svg viewBox="0 0 320 220" width="320" height="220" class="hero__art">
+                <rect x="30" y="170" width="270" height="8" rx="4" fill="#cfd3d6"/>
+                <rect x="50" y="92" width="120" height="78" rx="8" fill="#fff" stroke="#d7dbde" stroke-width="3"/>
+                <path d="M170 110 h54 l34 30 v30 h-88 z" fill="#E31E26"/>
+                <rect x="180" y="118" width="34" height="24" rx="4" fill="#bcdffb"/>
+                <circle cx="92" cy="176" r="20" fill="#2d2d2d"/><circle cx="226" cy="176" r="20" fill="#2d2d2d"/>
+                <circle cx="92" cy="176" r="8" fill="#9a9a9a"/><circle cx="226" cy="176" r="8" fill="#9a9a9a"/>
+                <path d="M110 118 l3.4 9.6 10-0.2-8 6 3 9.6-8.4-5.7-8.4 5.7 3-9.6-8-6 10 .2z" fill="#E31E26"/>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Slide 4 (seasonal) -->
+          <article class="hero__slide hero__slide--winter" role="group" aria-roledescription="slide" aria-label="4 of 4: Winter ready" id="heroSlide3" hidden>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Seasonal · Winter Ready</p>
+              <h2 class="hero__title">Salt &amp; Calcium Stain Removers, Ice Melt &amp; Matting</h2>
+              <p class="hero__sub">Protect floors and entrances all season with Crown Winter Rinse &amp; ice-melt.</p>
+              <a class="btn btn--primary hero__cta" href="#products" data-cat="Monthly Specials">Shop Winter Essentials</a>
+            </div>
+            <div class="hero__media" aria-hidden="true">
+              <!-- IMAGE PLACEHOLDER: winter ice-melt + matting -->
+              <svg viewBox="0 0 320 220" width="320" height="220" class="hero__art">
+                <ellipse cx="160" cy="198" rx="120" ry="12" fill="#dadee1"/>
+                <path d="M96 110 h78 l-8 84 h-62 z" fill="#1b6fb3"/>
+                <rect x="92" y="100" width="86" height="16" rx="6" fill="#155a91"/>
+                <rect x="106" y="132" width="56" height="38" rx="4" fill="#fff"/>
+                <text x="134" y="156" text-anchor="middle" font-size="12" font-weight="800" fill="#1b6fb3" font-family="sans-serif">ICE MELT</text>
+                <g fill="#bcdffb">
+                  <path d="M232 60 v44 M210 82 h44 M216 68 l32 28 M248 68 l-32 28" stroke="#7fc0f2" stroke-width="5" stroke-linecap="round"/>
+                </g>
+              </svg>
+            </div>
+          </article>
+
+        </div>
+
+        <button class="hero__arrow hero__arrow--prev" id="heroPrev" type="button" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="hero__arrow hero__arrow--next" id="heroNext" type="button" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="hero__dots" id="heroDots" role="tablist" aria-label="Choose slide"></div>
+      </div>
+      <div class="hero__fade" aria-hidden="true"></div>
+    </section>
+
+    <div class="page">
+      <!-- ============================================================= -->
+      <!-- 4. CARD GRID ROW 1 (overlaps hero bottom)                     -->
+      <!-- ============================================================= -->
+      <section class="card-row card-row--overlap" aria-label="Shop highlights">
+        <article class="ux-card">
+          <h2 class="ux-card__title">Shop by Facility Type</h2>
+          <div class="mini-grid">
+            <a href="#products" data-cat="Cleaning Chemicals" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--office" aria-hidden="true"></span><span>Office</span></a>
+            <a href="#products" data-cat="Dishwashing & Kitchen" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--resto" aria-hidden="true"></span><span>Restaurant</span></a>
+            <a href="#products" data-cat="Disinfectants & Deodorants" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--health" aria-hidden="true"></span><span>Healthcare</span></a>
+            <a href="#products" data-cat="Equipment & Machines" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--ware" aria-hidden="true"></span><span>Warehouse</span></a>
+          </div>
+          <a class="ux-card__link" href="#categories">See all facility types</a>
+        </article>
+
+        <article class="ux-card">
+          <h2 class="ux-card__title">Crown Chemical Favourites</h2>
+          <div class="mini-grid">
+            <a href="#products" data-cat="Degreasers" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--degrease" aria-hidden="true"></span><span>Degreasers</span></a>
+            <a href="#products" data-cat="Floor Care" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--floor" aria-hidden="true"></span><span>Floor Cleaners</span></a>
+            <a href="#products" data-cat="Disinfectants & Deodorants" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--disinfect" aria-hidden="true"></span><span>Disinfectants</span></a>
+            <a href="#products" data-cat="Hand Cleaners & Soap" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--soap" aria-hidden="true"></span><span>Hand Soap</span></a>
+          </div>
+          <a class="ux-card__link" href="#crown-spotlight">Shop the house brand</a>
+        </article>
+
+        <article class="ux-card">
+          <h2 class="ux-card__title">Restock Essentials</h2>
+          <div class="mini-grid">
+            <a href="#products" data-cat="Paper Products" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--paper" aria-hidden="true"></span><span>Paper Towels</span></a>
+            <a href="#products" data-cat="Garbage Bags" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--bag" aria-hidden="true"></span><span>Garbage Bags</span></a>
+            <a href="#products" data-cat="Skin Care & Hand Hygiene" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--sanitizer" aria-hidden="true"></span><span>Hand Sanitizer</span></a>
+            <a href="#products" data-cat="Safety Supplies" class="mini-grid__cell"><span class="mini-grid__art mini-grid__art--glove" aria-hidden="true"></span><span>Gloves</span></a>
+          </div>
+          <a class="ux-card__link" href="#products" data-cat="Monthly Specials">See monthly specials</a>
+        </article>
+
+        <article class="ux-card ux-card--signin">
+          <h2 class="ux-card__title">Sign in for contract pricing</h2>
+          <p class="ux-card__copy">See your negotiated rates, case pricing and order history.</p>
+          <button class="btn btn--yellow ux-card__btn" type="button" data-toast="Sign-in is disabled in this prototype.">Sign in securely</button>
+          <p class="ux-card__newcust">New customer?
+            <a href="#quote-cta" data-open-modal="quote">Request a B2B account</a>
+          </p>
+        </article>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 5. PRODUCT CAROUSEL: Crown Chemical Best Sellers              -->
+      <!-- (heading + track are re-used for category/search filtering)  -->
+      <!-- ============================================================= -->
+      <section class="panel products" id="products" aria-labelledby="productsHeading">
+        <div class="panel__head">
+          <h2 class="panel__title" id="productsHeading">Crown Chemical Best Sellers</h2>
+          <div class="panel__filter" id="productsFilter" hidden>
+            <span class="chip" id="productsChip"></span>
+          </div>
+          <a class="panel__seeall" href="#categories">Shop all categories</a>
+        </div>
+
+        <div class="carousel" id="productCarousel">
+          <button class="carousel__arrow carousel__arrow--prev" id="prodPrev" type="button" aria-label="Scroll products left" hidden>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="carousel__track" id="productTrack" aria-label="Crown Chemical best selling products"></ul>
+          <button class="carousel__arrow carousel__arrow--next" id="prodNext" type="button" aria-label="Scroll products right">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 6. CARD GRID ROW 2                                            -->
+      <!-- ============================================================= -->
+      <section class="card-row" aria-label="Featured ranges">
+        <article class="ux-card">
+          <h2 class="ux-card__title">Karcher Equipment</h2>
+          <span class="badge badge--karcher">Authorized Karcher Dealer</span>
+          <a href="#products" data-cat="Karcher Equipment" class="ux-card__hero">
+            <span class="ux-card__hero-art ux-card__hero-art--machine" aria-hidden="true"></span>
+          </a>
+          <ul class="ux-card__list">
+            <li><a href="#products" data-cat="Karcher Equipment">Pressure washers</a></li>
+            <li><a href="#products" data-cat="Floor Machines">Floor scrubbers &amp; sweepers</a></li>
+            <li><a href="#products" data-cat="Karcher Equipment">Parts &amp; service</a></li>
+          </ul>
+          <a class="ux-card__link" href="#products" data-cat="Karcher Equipment">Shop Karcher</a>
+        </article>
+
+        <article class="ux-card">
+          <h2 class="ux-card__title">Hand Hygiene by GOJO &amp; Purell</h2>
+          <a href="#products" data-cat="Skin Care & Hand Hygiene" class="ux-card__hero">
+            <span class="ux-card__hero-art ux-card__hero-art--hygiene" aria-hidden="true"></span>
+          </a>
+          <ul class="ux-card__list">
+            <li><a href="#products" data-cat="Skin Care & Hand Hygiene">Sanitizers</a></li>
+            <li><a href="#products" data-cat="Hand Cleaners & Soap">Soap refills</a></li>
+            <li><a href="#products" data-cat="Dispensers">Dispensers</a></li>
+          </ul>
+          <a class="ux-card__link" href="#products" data-cat="Skin Care & Hand Hygiene">Shop hand hygiene</a>
+        </article>
+
+        <article class="ux-card">
+          <h2 class="ux-card__title">Paper &amp; Dispensers</h2>
+          <a href="#products" data-cat="Paper Products" class="ux-card__hero">
+            <span class="ux-card__hero-art ux-card__hero-art--paper" aria-hidden="true"></span>
+          </a>
+          <ul class="ux-card__list">
+            <li><a href="#products" data-cat="Paper Products">Tork roll towel</a></li>
+            <li><a href="#products" data-cat="Paper Products">Kimberly-Clark / Scott</a></li>
+            <li><a href="#products" data-cat="Dispensers">Bay West dispensers</a></li>
+          </ul>
+          <a class="ux-card__link" href="#products" data-cat="Paper Products">Shop paper</a>
+        </article>
+
+        <article class="ux-card">
+          <h2 class="ux-card__title">New at Roy Turk</h2>
+          <a href="#products" data-cat="Monthly Specials" class="ux-card__hero">
+            <span class="ux-card__hero-art ux-card__hero-art--new" aria-hidden="true">
+              <span class="ux-card__hero-tag">NEW</span>
+            </span>
+          </a>
+          <p class="ux-card__copy">Crown Liquid Enzyme Waste Treatment — now in 4L &amp; 20L for grease traps &amp; drains.</p>
+          <a class="ux-card__link" href="#products" data-cat="Monthly Specials">See what's new</a>
+        </article>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 7. BRAND LOGO STRIP                                           -->
+      <!-- ============================================================= -->
+      <section class="brand-strip" aria-label="Brands we carry">
+        <h2 class="brand-strip__title">Trusted brands we stock &amp; service</h2>
+        <ul class="brand-strip__list" id="brandStrip"><!-- populated by app.js --></ul>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 8. TRUST / VALUE PROPS BAND                                   -->
+      <!-- ============================================================= -->
+      <section class="trust" id="trust" aria-label="Why buy from Roy Turk">
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 21.4 6.8 18.1l1-5.8L3.5 8.2l5.9-.9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">Since 1968</h3>
+          <p class="trust__copy">Family-owned, 55+ years serving the GTA.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </span>
+          <h3 class="trust__head">Free Next-Day Delivery</h3>
+          <p class="trust__copy">Across the Greater Toronto Area.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 7l8-4 8 4-8 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7v8l8 4 8-4V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">3,600+ Products</h3>
+          <p class="trust__copy">One-stop shop for facility maintenance.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M14.7 6.3a4 4 0 00-5.4 5.4l-6 6 2 2 6-6a4 4 0 005.4-5.4l-2.7 2.7-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">Expert Support</h3>
+          <p class="trust__copy">Equipment service, repairs &amp; product advice.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 9. CROWN CHEMICAL SPOTLIGHT                                   -->
+      <!-- ============================================================= -->
+      <section class="spotlight" id="crown-spotlight" aria-labelledby="spotlightHeading">
+        <div class="spotlight__text">
+          <span class="badge badge--crown">House Brand · Crown Chemical Mfg. Inc.</span>
+          <h2 class="spotlight__title" id="spotlightHeading">Custom Chemical Manufacturing &amp; Private Label</h2>
+          <p class="spotlight__copy">Crown Chemical is Roy Turk's manufacturing arm — 60+ years of custom blending of acids, powders and liquids. We produce the exclusive Crown Chemical line you won't find anywhere else, plus custom labelling and environmentally conscious formulations tailored to your facility.</p>
+          <ul class="spotlight__points">
+            <li>Custom blending &amp; packaging — pails, totes, drums</li>
+            <li>Private-label &amp; custom labelling programs</li>
+            <li>Environmentally conscious, concentrated formulas</li>
+          </ul>
+          <div class="spotlight__cta">
+            <a class="btn btn--primary" href="#products" data-cat="Crown Chemical Brand">View Crown Catalogue</a>
+            <button class="btn btn--outline" type="button" data-open-modal="quote">Ask About Private Label</button>
+          </div>
+        </div>
+        <div class="spotlight__media" aria-hidden="true">
+          <!-- IMAGE PLACEHOLDER: Crown Chemical manufacturing / blending facility -->
+          <svg viewBox="0 0 360 280" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" class="spotlight__art">
+            <rect width="360" height="280" rx="14" fill="#eef0f2"/>
+            <rect x="40" y="150" width="280" height="90" rx="8" fill="#dfe3e6"/>
+            <g>
+              <rect x="70" y="86" width="44" height="40" rx="6" fill="#4A4A4A"/>
+              <circle cx="92" cy="70" r="22" fill="#E31E26"/>
+              <rect x="84" y="126" width="16" height="60" fill="#9aa0a5"/>
+            </g>
+            <g>
+              <rect x="150" y="70" width="60" height="56" rx="6" fill="#E31E26"/>
+              <rect x="158" y="92" width="44" height="22" rx="3" fill="#fff"/>
+              <text x="180" y="108" text-anchor="middle" font-size="13" font-weight="800" fill="#E31E26" font-family="sans-serif">CROWN</text>
+              <rect x="172" y="126" width="16" height="60" fill="#9aa0a5"/>
+            </g>
+            <g>
+              <rect x="246" y="96" width="44" height="30" rx="6" fill="#4A4A4A"/>
+              <circle cx="268" cy="82" r="18" fill="#bcdffb"/>
+              <rect x="260" y="126" width="16" height="60" fill="#9aa0a5"/>
+            </g>
+            <rect x="40" y="186" width="280" height="10" fill="#c7ccd0"/>
+            <text x="180" y="224" text-anchor="middle" font-size="13" fill="#7a8087" font-family="sans-serif">Crown Chemical blending &amp; packaging</text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 10. SHOP BY CATEGORY tile grid                                -->
+      <!-- ============================================================= -->
+      <section class="panel categories" id="categories" aria-labelledby="catHeading">
+        <div class="panel__head">
+          <h2 class="panel__title" id="catHeading">Shop by Category</h2>
+        </div>
+        <ul class="cat-grid" id="categoryGrid"><!-- populated by app.js --></ul>
+      </section>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- 11. QUOTE REQUEST CTA BAND (red)                              -->
+    <!-- ============================================================= -->
+    <section class="quote-cta" id="quote-cta" aria-labelledby="quoteCtaHeading">
+      <div class="quote-cta__inner">
+        <div class="quote-cta__text">
+          <h2 class="quote-cta__title" id="quoteCtaHeading">Need volume pricing or a custom quote? Talk to a real person.</h2>
+          <p class="quote-cta__sub">Our team builds quotes for facility managers, contractors, healthcare, schools &amp; restaurants across the GTA.</p>
+        </div>
+        <div class="quote-cta__actions">
+          <!-- PHONE placeholder -->
+          <a class="quote-cta__phone" href="tel:+14167449000">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11.4 11.4 0 003.6.6 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.4 11.4 0 00.6 3.6 1 1 0 01-.24 1z" fill="currentColor"/></svg>
+            416-744-9000
+          </a>
+          <button class="btn btn--yellow btn--lg" type="button" data-open-modal="quote">Request a Quote</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================= -->
+  <!-- 12. FOOTER                                                    -->
+  <!-- ============================================================= -->
+  <footer class="footer">
+    <button class="footer__top" id="backToTop" type="button">Back to top</button>
+    <div class="footer__cols">
+      <div class="footer__col">
+        <h3 class="footer__head">Get to Know Us</h3>
+        <ul>
+          <li><a href="#" data-toast="Prototype link.">About Roy Turk</a></li>
+          <li><a href="#" data-toast="Prototype link.">Careers</a></li>
+          <li><a href="#" data-toast="Prototype link.">Our Story — since 1968</a></li>
+          <li><a href="#crown-spotlight">Crown Chemical Mfg.</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__head">Products</h3>
+        <ul>
+          <li><a href="#products" data-cat="Cleaning Chemicals">Cleaning Chemicals</a></li>
+          <li><a href="#products" data-cat="Paper Products">Paper Products</a></li>
+          <li><a href="#products" data-cat="Karcher Equipment">Karcher Equipment</a></li>
+          <li><a href="#products" data-cat="Skin Care & Hand Hygiene">Skin Care &amp; Hygiene</a></li>
+          <li><a href="#categories">All categories</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__head">Customer Service</h3>
+        <ul>
+          <li><a href="#quote-cta" data-open-modal="quote">Contact us</a></li>
+          <li><a href="#trust">Delivery info</a></li>
+          <li><a href="#" data-toast="Prototype link.">Returns</a></li>
+          <li><a href="#" data-toast="Prototype link.">Equipment service &amp; repair</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__head">Account</h3>
+        <ul>
+          <li><a href="#" data-toast="Sign-in is disabled in this prototype.">Sign in</a></li>
+          <li><a href="#quote-cta" data-open-modal="quote">Request a B2B account</a></li>
+          <li><a href="#" data-toast="Order history is disabled in this prototype.">Order history</a></li>
+          <li><button class="footer__linkbtn" type="button" id="openQuoteFooter">Quote cart</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bar">
+      <a class="footer__brand" href="#top" aria-label="Roy Turk Industrial Sales Ltd.">
+        <span class="brand__mark brand__mark--sm" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff" stroke="#E31E26" stroke-width="2"/><path d="M24 6 l3.2 9.3 9.6-3-3.7 8.6 8.7 2-7.4 5.4 3.8 8.1-10-2.9 0.9 10.6-5.7-5.8-5.7 5.8 0.9-10.6-10 2.9 3.8-8.1-7.4-5.4 8.7-2-3.7-8.6 9.6 3z" fill="#E31E26"/></svg>
+        </span>
+        <span class="footer__brand-text"><strong>ROY TURK</strong> Industrial Sales Ltd.</span>
+      </a>
+      <p class="footer__meta">
+        106 Vulcan St, Etobicoke, ON M9W 1L2 ·
+        <a href="tel:+14167449000">416-744-9000</a> ·
+        <a href="mailto:sales@royturk.com">sales@royturk.com</a>
+      </p>
+      <p class="footer__legal">
+        <a href="#" data-toast="Prototype link.">Privacy Policy</a> ·
+        <a href="#" data-toast="Prototype link.">Terms</a> ·
+        <span>© 2026 Roy Turk Industrial Sales Ltd.</span> ·
+        <a href="#crown-spotlight">Crown Chemical Mfg. Inc. (crownchemical.ca)</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================================= -->
+  <!-- OVERLAYS: backdrop, mega-menu, quote panel, modal, toast      -->
+  <!-- ============================================================= -->
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <!-- "All" mega-menu slide-in -->
+  <aside class="mega" id="megaMenu" role="dialog" aria-modal="true" aria-label="All categories" hidden>
+    <div class="mega__head">
+      <span class="mega__title">Hello — Browse all categories</span>
+      <button class="mega__close" id="megaClose" type="button" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="mega__body" aria-label="All categories">
+      <p class="mega__group">Shop by Category</p>
+      <ul class="mega__list" id="megaList"><!-- populated by app.js --></ul>
+      <p class="mega__group">Help &amp; Settings</p>
+      <ul class="mega__list">
+        <li><a href="#" data-toast="Sign-in is disabled in this prototype.">Sign in / Account &amp; Quotes</a></li>
+        <li><a href="#quote-cta" data-open-modal="quote">Request a B2B account</a></li>
+        <li><a href="tel:+14167449000">Call 416-744-9000</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Quote cart slide-out panel -->
+  <aside class="quote-panel" id="quotePanel" role="dialog" aria-modal="true" aria-labelledby="quotePanelTitle" hidden>
+    <div class="quote-panel__head">
+      <h2 class="quote-panel__title" id="quotePanelTitle">Your Quote Request <span id="quotePanelCount" class="quote-panel__count">(0)</span></h2>
+      <button class="quote-panel__close" id="quoteClose" type="button" aria-label="Close quote cart">&times;</button>
+    </div>
+    <div class="quote-panel__body" id="quoteBody">
+      <!-- empty state + items injected by app.js -->
+    </div>
+    <div class="quote-panel__foot">
+      <p class="quote-panel__note">Pricing is confirmed by our team — case &amp; volume pricing applied to your quote.</p>
+      <button class="btn btn--primary btn--block" id="submitQuote" type="button" disabled>Submit Quote Request</button>
+    </div>
+  </aside>
+
+  <!-- Quote request modal -->
+  <div class="modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__panel" role="document">
+      <button class="modal__close" id="modalClose" type="button" aria-label="Close dialog">&times;</button>
+      <h2 class="modal__title" id="modalTitle">Request a Quote</h2>
+      <p class="modal__sub">Tell us what you need — a Roy Turk rep will get back to you, usually same business day.</p>
+      <form class="modal__form" id="quoteForm" novalidate>
+        <div class="field">
+          <label for="qName">Name <span aria-hidden="true">*</span></label>
+          <input id="qName" name="name" type="text" required autocomplete="name" />
+          <span class="field__error" id="qNameErr" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="qCompany">Company <span aria-hidden="true">*</span></label>
+          <input id="qCompany" name="company" type="text" required autocomplete="organization" />
+          <span class="field__error" id="qCompanyErr" role="alert"></span>
+        </div>
+        <div class="field field--half">
+          <label for="qEmail">Email <span aria-hidden="true">*</span></label>
+          <input id="qEmail" name="email" type="email" required autocomplete="email" />
+          <span class="field__error" id="qEmailErr" role="alert"></span>
+        </div>
+        <div class="field field--half">
+          <label for="qPhone">Phone</label>
+          <input id="qPhone" name="phone" type="tel" autocomplete="tel" />
+          <span class="field__error" id="qPhoneErr" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="qMessage">What do you need a quote on? <span aria-hidden="true">*</span></label>
+          <textarea id="qMessage" name="message" rows="4" required></textarea>
+          <span class="field__error" id="qMessageErr" role="alert"></span>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Send Request</button>
+        <p class="modal__disclaimer">Prototype only — no information is actually submitted or stored.</p>
+      </form>
+      <div class="modal__success" id="modalSuccess" hidden>
+        <span class="modal__check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="48" height="48"><circle cx="12" cy="12" r="11" fill="none" stroke="#0a7d33" stroke-width="2"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#0a7d33" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Thanks, we'll be in touch!</h3>
+        <p>A Roy Turk rep will follow up shortly. (This is a prototype — nothing was actually sent.)</p>
+        <button class="btn btn--outline" type="button" id="modalDone">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast / live region -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+/* =================================================================
+   Roy Turk Industrial Sales Ltd. — landing page prototype logic
+   Vanilla JS, no dependencies. 100% client-side (no real network).
+   ================================================================= */
+(function () {
+  'use strict';
+
+  /* ===============================================================
+     SAMPLE DATA  —  EDIT PRODUCTS / PRICES HERE
+     ---------------------------------------------------------------
+     Each product:
+       id          unique slug
+       name        display name
+       brand       manufacturer (Crown Chemical = house brand)
+       crown       true  -> Roy Turk house brand styling
+       bestSeller  true  -> shown in the "Best Sellers" carousel
+       onSpecial   true  -> shown under "Monthly Specials"
+       category    primary category (matches a "Shop by Category" tile)
+       tags        extra categories this product should appear under
+       buckets     search-dropdown buckets it belongs to
+       sizes       size / pack badges
+       casePricing show the "Case pricing available" tag
+       icon        which placeholder glyph to draw
+       price       null -> shows "Sign in for pricing" (B2B). Set a
+                   string like "$24.95 / 4L" to display a real price.
+     =============================================================== */
+  var SAMPLE_PRODUCTS = [
+    /* ---- Crown Chemical best sellers (house brand) ---- */
+    { id: 'crown-winter-rinse', name: 'Winter Rinse Calcium Stain Remover', brand: 'Crown Chemical', crown: true, bestSeller: true, onSpecial: true,
+      category: 'Floor Care', tags: ['Cleaning Chemicals', 'Floor Care', 'Monthly Specials'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'Removes salt, calcium & efflorescence stains from floors.' },
+
+    { id: 'crown-lift-off', name: 'Lift Off Specialty Cleaner', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Degreasers', tags: ['Cleaning Chemicals', 'Degreasers'], buckets: ['Chemicals'],
+      sizes: ['1L', '4L'], casePricing: true, icon: 'spray', price: null,
+      blurb: 'Lifts adhesive, ink, tar & scuff marks fast.' },
+
+    { id: 'crown-odorex', name: 'Odorex Deodorizer', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Disinfectants & Deodorants', tags: ['Cleaning Chemicals', 'Disinfectants & Deodorants'], buckets: ['Chemicals'],
+      sizes: ['4L'], casePricing: true, icon: 'bottle', price: null,
+      blurb: 'Industrial odour counteractant for any facility.' },
+
+    { id: 'crown-no-strip-lemon', name: 'No Strip Lemon Neutral Floor Cleaner', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Floor Care', tags: ['Cleaning Chemicals', 'Floor Care'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'Neutral-pH daily cleaner that won’t dull finish.' },
+
+    { id: 'crown-crystal-clear', name: 'Crystal Clear Glass Cleaner', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Glass Cleaners', tags: ['Cleaning Chemicals', 'Glass Cleaners'], buckets: ['Chemicals'],
+      sizes: ['1L', '4L'], casePricing: true, icon: 'spray', price: null,
+      blurb: 'Streak-free glass, mirror & surface cleaner.' },
+
+    { id: 'crown-white-pearl', name: 'White Pearl Premium Grade Hand Soap', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Hand Cleaners & Soap', tags: ['Hand Cleaners & Soap', 'Skin Care & Hand Hygiene'], buckets: ['Skin Care'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'soap', price: null,
+      blurb: 'Premium pearlized lotion hand soap.' },
+
+    { id: 'crown-pink-pearl', name: 'Pink Pearl Anti-Bacterial Hand Soap', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Hand Cleaners & Soap', tags: ['Hand Cleaners & Soap', 'Skin Care & Hand Hygiene'], buckets: ['Skin Care'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'soap', price: null,
+      blurb: 'Anti-bacterial pink lotion soap for high traffic.' },
+
+    { id: 'crown-oven-griddle', name: 'Oven & Griddle Cleaner', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Dishwashing & Kitchen', tags: ['Cleaning Chemicals', 'Degreasers', 'Dishwashing & Kitchen'], buckets: ['Chemicals'],
+      sizes: ['1L', '4L'], casePricing: true, icon: 'spray', price: null,
+      blurb: 'Heavy-duty cleaner for ovens, grills & griddles.' },
+
+    { id: 'crown-aluminum', name: 'Aluminum Cleaner & Brightener', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Cleaning Chemicals', tags: ['Cleaning Chemicals', 'Degreasers'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'Acidic brightener for aluminum, trailers & rims.' },
+
+    { id: 'crown-laundry', name: 'Liquid Laundry Detergent', brand: 'Crown Chemical', crown: true, bestSeller: true,
+      category: 'Laundry', tags: ['Cleaning Chemicals', 'Laundry'], buckets: ['Chemicals'],
+      sizes: ['20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'High-efficiency commercial laundry detergent.' },
+
+    { id: 'crown-enzyme', name: 'Liquid Enzyme Waste Treatment', brand: 'Crown Chemical', crown: true, bestSeller: true, onSpecial: true,
+      category: 'Cleaning Chemicals', tags: ['Cleaning Chemicals', 'Monthly Specials'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'bottle', price: null, badge: 'New',
+      blurb: 'Enzyme digestant for drains, grease traps & odours.' },
+
+    /* ---- More Crown house-brand items (fill out categories) ---- */
+    { id: 'crown-degreaser', name: 'Heavy-Duty Industrial Degreaser', brand: 'Crown Chemical', crown: true,
+      category: 'Degreasers', tags: ['Cleaning Chemicals', 'Degreasers'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'Cuts baked-on grease in kitchens & shops.' },
+    { id: 'crown-disinfectant', name: 'Crown Disinfectant Cleaner (DIN)', brand: 'Crown Chemical', crown: true,
+      category: 'Disinfectants & Deodorants', tags: ['Cleaning Chemicals', 'Disinfectants & Deodorants'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'bottle', price: null,
+      blurb: 'Health-Canada DIN disinfectant & sanitizer.' },
+    { id: 'crown-bowl', name: 'Bowl & Bathroom Acid Cleaner', brand: 'Crown Chemical', crown: true,
+      category: 'Bathroom & Bowl Cleaners', tags: ['Cleaning Chemicals', 'Bathroom & Bowl Cleaners'], buckets: ['Chemicals'],
+      sizes: ['1L', '4L'], casePricing: true, icon: 'bottle', price: null,
+      blurb: 'Descales bowls, urinals & washroom fixtures.' },
+    { id: 'crown-carpet', name: 'Carpet & Upholstery Shampoo', brand: 'Crown Chemical', crown: true,
+      category: 'Carpet & Upholstery', tags: ['Cleaning Chemicals', 'Carpet & Upholstery'], buckets: ['Chemicals'],
+      sizes: ['4L', '20L pail'], casePricing: true, icon: 'spray', price: null,
+      blurb: 'Low-foam extraction shampoo for carpet & fabric.' },
+
+    /* ---- Karcher equipment (Authorized Dealer) ---- */
+    { id: 'karcher-hd', name: 'Kärcher HD Cold-Water Pressure Washer', brand: 'Kärcher', crown: false,
+      category: 'Equipment & Machines', tags: ['Karcher Equipment', 'Equipment & Machines'], buckets: ['Equipment'],
+      sizes: ['Electric'], casePricing: false, icon: 'machine', price: null, badge: 'Authorized Dealer',
+      blurb: 'Compact cold-water pressure washer for daily use.' },
+    { id: 'karcher-scrubber', name: 'Kärcher Walk-Behind Floor Scrubber', brand: 'Kärcher', crown: false,
+      category: 'Equipment & Machines', tags: ['Karcher Equipment', 'Floor Machines', 'Equipment & Machines'], buckets: ['Equipment', 'Floor Machines'],
+      sizes: ['Battery'], casePricing: false, icon: 'machine', price: null, badge: 'Authorized Dealer',
+      blurb: 'Scrub & dry hard floors in a single pass.' },
+    { id: 'nss-pacer', name: 'NSS Pacer Commercial Upright Vacuum', brand: 'NSS', crown: false,
+      category: 'Equipment & Machines', tags: ['Floor Machines', 'Equipment & Machines'], buckets: ['Equipment', 'Floor Machines'],
+      sizes: ['14 in'], casePricing: false, icon: 'machine', price: null,
+      blurb: 'Durable upright vacuum for high-traffic carpet.' },
+    { id: 'rubbermaid-brute', name: 'Rubbermaid BRUTE Waste Container', brand: 'Rubbermaid', crown: false,
+      category: 'Equipment & Machines', tags: ['Equipment & Machines', 'Safety Supplies'], buckets: ['Equipment'],
+      sizes: ['32 gal', '44 gal'], casePricing: false, icon: 'bin', price: null,
+      blurb: 'Heavy-duty container for waste & transport.' },
+
+    /* ---- Skin care & hand hygiene ---- */
+    { id: 'purell-gel', name: 'Purell Advanced Hand Sanitizer Gel', brand: 'GOJO / Purell', crown: false,
+      category: 'Hand Cleaners & Soap', tags: ['Skin Care & Hand Hygiene', 'Hand Cleaners & Soap'], buckets: ['Skin Care'],
+      sizes: ['1L refill', '4L'], casePricing: true, icon: 'sanitizer', price: null,
+      blurb: '70% alcohol gel — kills 99.99% of germs.' },
+    { id: 'gojo-foam', name: 'GOJO Foaming Hand Soap Refill', brand: 'GOJO / Purell', crown: false,
+      category: 'Hand Cleaners & Soap', tags: ['Skin Care & Hand Hygiene', 'Hand Cleaners & Soap', 'Dispensers'], buckets: ['Skin Care'],
+      sizes: ['1200 mL'], casePricing: true, icon: 'soap', price: null,
+      blurb: 'Foaming soap refill for GOJO dispensers.' },
+
+    /* ---- Paper & dispensers ---- */
+    { id: 'tork-roll-towel', name: 'Tork Universal Hardwound Roll Towel', brand: 'Tork', crown: false,
+      category: 'Paper Products', tags: ['Paper Products'], buckets: ['Paper'],
+      sizes: ['800 ft', 'Case of 6'], casePricing: true, icon: 'paper', price: null,
+      blurb: 'Economical hardwound roll towel, 6/case.' },
+    { id: 'scott-tissue', name: 'Scott Essential Jumbo Roll Tissue', brand: 'Kimberly-Clark', crown: false,
+      category: 'Paper Products', tags: ['Paper Products'], buckets: ['Paper'],
+      sizes: ['2-ply', 'Case of 12'], casePricing: true, icon: 'paper', price: null,
+      blurb: 'JRT jumbo roll bath tissue, 12/case.' },
+    { id: 'bobrick-dispenser', name: 'Bobrick Roll Towel Dispenser', brand: 'Bobrick', crown: false,
+      category: 'Dispensers', tags: ['Dispensers'], buckets: ['Dispensers'],
+      sizes: ['Surface mount'], casePricing: false, icon: 'dispenser', price: null,
+      blurb: 'Stainless steel surface-mount towel dispenser.' },
+
+    /* ---- Bags, wipers, safety, shipping ---- */
+    { id: 'can-liners', name: 'Industrial Can Liners / Garbage Bags 35×50', brand: 'Roy Turk', crown: false,
+      category: 'Garbage Bags', tags: ['Garbage Bags & Liners', 'Garbage Bags'], buckets: ['Garbage Bags'],
+      sizes: ['Strong', 'X-Strong', '100/case'], casePricing: true, icon: 'bag', price: null,
+      blurb: 'Heavy-gauge can liners, 100 per case.' },
+    { id: 'microfiber', name: 'Colour-Coded Microfiber Cloths', brand: 'Roy Turk', crown: false,
+      category: 'Wipers & Microfiber', tags: ['Wipers & Microfiber'], buckets: ['Wipers'],
+      sizes: ['16×16', '12/pack'], casePricing: true, icon: 'wiper', price: null,
+      blurb: 'Lint-free microfibre, 12 per pack.' },
+    { id: 'nitrile-gloves', name: 'Powder-Free Nitrile Gloves', brand: 'Roy Turk', crown: false,
+      category: 'Safety Supplies', tags: ['Safety Supplies'], buckets: ['Safety'],
+      sizes: ['S–XL', '100/box'], casePricing: true, icon: 'glove', price: null,
+      blurb: 'Disposable nitrile exam gloves, 100/box.' },
+    { id: 'stretch-wrap', name: 'Hand Stretch Wrap / Pallet Film', brand: 'Roy Turk', crown: false,
+      category: 'Equipment & Machines', tags: ['Shipping Supplies'], buckets: ['Shipping'],
+      sizes: ['18 in', '4 rolls/case'], casePricing: true, icon: 'box', price: null,
+      blurb: 'Clear hand stretch film for pallets, 4/case.' },
+
+    /* ---- Seasonal / winter (Monthly Specials) ---- */
+    { id: 'ice-melt', name: 'Calcium Chloride Ice Melt Pellets', brand: 'Roy Turk', crown: false, onSpecial: true,
+      category: 'Safety Supplies', tags: ['Safety Supplies', 'Monthly Specials'], buckets: ['Safety'],
+      sizes: ['20 kg bag'], casePricing: true, icon: 'snow', price: null,
+      blurb: 'Fast-acting ice melt rated to −25 °C.' },
+    { id: 'entrance-mat', name: 'Scraper Entrance Matting', brand: 'Roy Turk', crown: false, onSpecial: true,
+      category: 'Safety Supplies', tags: ['Safety Supplies', 'Monthly Specials'], buckets: ['Safety'],
+      sizes: ['3×5', '4×6'], casePricing: false, icon: 'mat', price: null,
+      blurb: 'Traps slush & grit at the door all winter.' },
+    { id: 'diversey-finish', name: 'Diversey High-Solids Floor Finish', brand: 'Diversey', crown: false,
+      category: 'Floor Care', tags: ['Cleaning Chemicals', 'Floor Care'], buckets: ['Chemicals'],
+      sizes: ['5L', '20L pail'], casePricing: true, icon: 'pail', price: null,
+      blurb: 'Durable high-gloss floor finish / wax.' }
+  ];
+
+  /* "Shop by Category" tiles (name must match product.category / tags) */
+  var CATEGORIES = [
+    { name: 'Cleaning Chemicals', icon: 'bottle' },
+    { name: 'Degreasers', icon: 'spray' },
+    { name: 'Disinfectants & Deodorants', icon: 'spray' },
+    { name: 'Floor Care', icon: 'pail' },
+    { name: 'Carpet & Upholstery', icon: 'wiper' },
+    { name: 'Glass Cleaners', icon: 'spray' },
+    { name: 'Bathroom & Bowl Cleaners', icon: 'bottle' },
+    { name: 'Dishwashing & Kitchen', icon: 'bottle' },
+    { name: 'Laundry', icon: 'pail' },
+    { name: 'Hand Cleaners & Soap', icon: 'soap' },
+    { name: 'Paper Products', icon: 'paper' },
+    { name: 'Garbage Bags', icon: 'bag' },
+    { name: 'Wipers & Microfiber', icon: 'wiper' },
+    { name: 'Safety Supplies', icon: 'glove' },
+    { name: 'Equipment & Machines', icon: 'machine' },
+    { name: 'Dispensers', icon: 'dispenser' }
+  ];
+
+  /* Brand strip (Crown is highlighted as the house brand) */
+  var BRANDS = ['Kärcher', 'Kimberly-Clark', 'GOJO', 'Purell', 'Deb', 'Tork',
+    'Diversey', 'Rubbermaid', '3M', 'NSS', 'Bobrick', 'Crown Chemical'];
+
+  /* ===============================================================
+     SVG PLACEHOLDER GENERATOR (inline, offline, descriptive label)
+     Swap these for real product photos later.
+     =============================================================== */
+  var ICONS = {
+    pail: function (c) { return "<path d='M70 72 l6 56 a5 5 0 005 5 h38 a5 5 0 005 -5 l6 -56' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M64 72 h72' stroke='" + c + "' stroke-width='5' stroke-linecap='round'/><path d='M77 72 q23 -20 46 0' fill='none' stroke='" + c + "' stroke-width='4'/>"; },
+    bottle: function (c) { return "<path d='M88 46 h24 v9 l6 11 v62 a5 5 0 01-5 5 H87 a5 5 0 01-5 -5 V66 l6 -11 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><rect x='89' y='88' width='22' height='30' rx='2' fill='none' stroke='" + c + "' stroke-width='3'/><path d='M92 42 h16' stroke='" + c + "' stroke-width='5' stroke-linecap='round'/>"; },
+    spray: function (c) { return "<rect x='82' y='80' width='34' height='52' rx='5' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M92 80 V62 h20' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M112 62 l16 -6 v12 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M92 70 H78 l-9 -7' fill='none' stroke='" + c + "' stroke-width='4' stroke-linecap='round'/>"; },
+    soap: function (c) { return "<rect x='80' y='80' width='40' height='52' rx='6' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M92 80 V64 h16 v16' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M100 64 V52 h18' fill='none' stroke='" + c + "' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>"; },
+    sanitizer: function (c) { return "<rect x='82' y='82' width='36' height='50' rx='6' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M92 82 V66 h16 v16' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M100 66 V54 h16' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M124 70 q5 7 0 13 q-5 -6 0 -13z' fill='" + c + "'/>"; },
+    machine: function (c) { return "<rect x='74' y='58' width='44' height='46' rx='6' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M82 72 h28' stroke='" + c + "' stroke-width='4' stroke-linecap='round'/><circle cx='86' cy='124' r='10' fill='none' stroke='" + c + "' stroke-width='4'/><circle cx='112' cy='124' r='10' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M118 68 q22 -4 22 24' fill='none' stroke='" + c + "' stroke-width='4'/>"; },
+    paper: function (c) { return "<rect x='72' y='66' width='58' height='46' rx='6' fill='none' stroke='" + c + "' stroke-width='4'/><ellipse cx='72' cy='89' rx='8' ry='23' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M130 89 h14' stroke='" + c + "' stroke-width='4' stroke-linecap='round'/>"; },
+    bag: function (c) { return "<path d='M76 74 h48 l-5 56 a5 5 0 01-5 5 H86 a5 5 0 01-5 -5 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M80 74 q4 -16 20 -16 t20 16' fill='none' stroke='" + c + "' stroke-width='4'/>"; },
+    glove: function (c) { return "<path d='M82 132 V98 q0 -8 -4 -14 a6 6 0 0110 -5 q3 4 4 9 V58 a6 6 0 0112 0 v18 q4 -1 8 1 v4 q5 -1 8 3 v22 a18 18 0 01-6 14 v10 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/>"; },
+    wiper: function (c) { return "<path d='M70 70 h60 v40 q-15 9 -30 1 q-15 -8 -30 1 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M70 84 h60 M70 97 h60' stroke='" + c + "' stroke-width='2' opacity='.55'/>"; },
+    bin: function (c) { return "<path d='M77 76 l5 54 a5 5 0 005 5 h26 a5 5 0 005 -5 l5 -54' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><rect x='70' y='66' width='60' height='10' rx='3' fill='none' stroke='" + c + "' stroke-width='4'/><path d='M92 88 v38 M108 88 v38' stroke='" + c + "' stroke-width='3' opacity='.55'/>"; },
+    dispenser: function (c) { return "<rect x='76' y='54' width='48' height='66' rx='8' fill='none' stroke='" + c + "' stroke-width='4'/><circle cx='100' cy='76' r='8' fill='none' stroke='" + c + "' stroke-width='3'/><path d='M90 108 h20' stroke='" + c + "' stroke-width='4' stroke-linecap='round'/><path d='M88 120 v8 h24 v-8' fill='none' stroke='" + c + "' stroke-width='4'/>"; },
+    box: function (c) { return "<path d='M70 80 l30 -16 30 16 v34 l-30 16 -30 -16 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M70 80 l30 16 30 -16 M100 96 v34' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/>"; },
+    snow: function (c) { return "<g stroke='" + c + "' stroke-width='4' stroke-linecap='round'><path d='M100 48 v60 M74 63 l52 30 M126 63 l-52 30'/><path d='M100 48 l-8 11 M100 48 l8 11 M100 108 l-8 -11 M100 108 l8 -11 M74 63 l1 13 M74 63 l13 1 M126 63 l-1 13 M126 63 l-13 1'/></g>"; },
+    mat: function (c) { return "<path d='M64 94 l36 -17 36 17 -36 17 z' fill='none' stroke='" + c + "' stroke-width='4' stroke-linejoin='round'/><path d='M80 92 l20 -9 M92 98 l20 -9 M88 86 l20 9 M100 102 l20 -9' stroke='" + c + "' stroke-width='2' opacity='.55'/>"; }
+  };
+
+  function escapeXml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* Returns a data-URI SVG thumbnail with a descriptive label. */
+  function placeholderImage(label, icon, crown) {
+    var stroke = crown ? '#E31E26' : '#5a6066';
+    var bg = crown ? '#fdecec' : '#eef1f3';
+    var draw = (ICONS[icon] || ICONS.bottle)(stroke);
+    var short = label.length > 24 ? label.slice(0, 23) + '…' : label;
+    var svg =
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' role='img'>" +
+      "<rect width='200' height='200' fill='" + bg + "'/>" +
+      "<rect x='8' y='8' width='184' height='184' rx='12' fill='#ffffff' stroke='#e2e6e9' stroke-width='2'/>" +
+      draw +
+      "<text x='100' y='172' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12' fill='#5a6066'>" + escapeXml(short) + "</text>" +
+      "</svg>";
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  /* ===============================================================
+     Small helpers + element refs
+     =============================================================== */
+  var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var els = {
+    header: $('#siteHeader'),
+    // search
+    searchForm: $('#searchForm'), searchInput: $('#searchInput'), searchCat: $('#searchCat'), searchResults: $('#searchResults'),
+    // quote cart
+    openQuote: $('#openQuote'), openQuoteFooter: $('#openQuoteFooter'), quoteCount: $('#quoteCount'),
+    quotePanel: $('#quotePanel'), quoteClose: $('#quoteClose'), quoteBody: $('#quoteBody'),
+    quotePanelCount: $('#quotePanelCount'), submitQuote: $('#submitQuote'),
+    // mega
+    openMenu: $('#openMenu'), openMenuMobile: $('#openMenuMobile'), megaMenu: $('#megaMenu'), megaClose: $('#megaClose'), megaList: $('#megaList'),
+    // hero
+    heroViewport: $('#heroViewport'), heroPrev: $('#heroPrev'), heroNext: $('#heroNext'), heroDots: $('#heroDots'),
+    // products
+    productTrack: $('#productTrack'), productCarousel: $('#productCarousel'), prodPrev: $('#prodPrev'), prodNext: $('#prodNext'),
+    productsHeading: $('#productsHeading'), productsFilter: $('#productsFilter'), productsChip: $('#productsChip'),
+    // category + brand
+    categoryGrid: $('#categoryGrid'), brandStrip: $('#brandStrip'),
+    // modal
+    modal: $('#quoteModal'), modalClose: $('#modalClose'), quoteForm: $('#quoteForm'),
+    modalSuccess: $('#modalSuccess'), modalDone: $('#modalDone'),
+    // misc
+    backdrop: $('#backdrop'), toast: $('#toast'), backToTop: $('#backToTop')
+  };
+
+  /* ===============================================================
+     TOAST
+     =============================================================== */
+  var toastTimer;
+  function showToast(msg) {
+    els.toast.textContent = msg;
+    els.toast.hidden = false;
+    requestAnimationFrame(function () { els.toast.classList.add('is-open'); });
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      els.toast.classList.remove('is-open');
+      setTimeout(function () { els.toast.hidden = true; }, 220);
+    }, 2600);
+  }
+
+  /* ===============================================================
+     PRODUCT RENDERING + category/search filtering
+     =============================================================== */
+  function bestSellers() { return SAMPLE_PRODUCTS.filter(function (p) { return p.bestSeller; }); }
+
+  function inCategory(p, cat) {
+    if (cat === 'Crown Chemical Brand') return p.crown;
+    if (cat === 'Monthly Specials') return p.onSpecial;
+    return p.category === cat || (p.tags || []).indexOf(cat) !== -1;
+  }
+
+  function productCardHTML(p) {
+    var sizes = (p.sizes || []).map(function (s) { return '<span class="product__size">' + escapeHtml(s) + '</span>'; }).join('');
+    var caseTag = p.casePricing
+      ? '<span class="product__case"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 12.5l4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Case pricing available</span>'
+      : '';
+    var price = p.price
+      ? '<p class="product__price"><strong>' + escapeHtml(p.price) + '</strong></p>'
+      : '<p class="product__price">Sign in for pricing</p>';
+    var badge = p.badge ? '<span class="product__brandtag" style="left:auto;right:8px;background:#E31E26;color:#fff;border-color:#E31E26">' + escapeHtml(p.badge) + '</span>' : '';
+    var alt = p.name + ' — ' + p.brand + ' (placeholder image)';
+    return '' +
+      '<li class="product' + (p.crown ? ' product--crown' : '') + '">' +
+        '<div class="product__imgwrap">' +
+          '<img class="product__img" loading="lazy" decoding="async" width="186" height="186" src="' + placeholderImage(p.name, p.icon, p.crown) + '" alt="' + escapeHtml(alt) + '">' +
+          '<span class="product__brandtag">' + escapeHtml(p.brand) + '</span>' + badge +
+        '</div>' +
+        '<h3 class="product__name">' + escapeHtml(p.name) + '</h3>' +
+        '<div class="product__sizes">' + sizes + '</div>' +
+        caseTag + price +
+        '<div class="product__btn"><button class="btn btn--primary" type="button" data-add="' + p.id + '">Add to Quote</button></div>' +
+      '</li>';
+  }
+
+  // current product view state
+  var view = { type: 'best' };
+
+  function applyProductView(next) {
+    view = next;
+    var list, heading, chipLabel = null, grid = true;
+
+    if (next.type === 'category') {
+      list = SAMPLE_PRODUCTS.filter(function (p) { return inCategory(p, next.cat); });
+      heading = next.cat;
+      chipLabel = next.cat;
+    } else if (next.type === 'search') {
+      list = searchMatches(next.query, next.bucket);
+      heading = 'Results for “' + next.query + '”';
+      chipLabel = '“' + next.query + '”';
+    } else {
+      list = bestSellers();
+      heading = 'Crown Chemical Best Sellers';
+      grid = false;
+    }
+
+    els.productsHeading.textContent = heading;
+    els.productCarousel.classList.toggle('is-grid', grid);
+    els.productTrack.classList.toggle('is-grid', grid);
+
+    if (list.length === 0) {
+      els.productTrack.innerHTML =
+        '<li class="panel__empty" style="grid-column:1/-1">' +
+          '<p>No products found in <strong>' + escapeHtml(heading.replace('Results for ', '')) + '</strong> yet.</p>' +
+          '<button class="btn btn--primary" type="button" data-open-modal="quote">Request a Quote</button>' +
+        '</li>';
+    } else {
+      els.productTrack.innerHTML = list.map(productCardHTML).join('');
+    }
+
+    // filter chip (clear control)
+    if (chipLabel) {
+      els.productsFilter.hidden = false;
+      els.productsChip.innerHTML = escapeHtml(list.length + ' result' + (list.length === 1 ? '' : 's') + ' · ' + chipLabel) +
+        ' <button type="button" id="clearFilter" aria-label="Clear filter">×</button>';
+    } else {
+      els.productsFilter.hidden = true;
+      els.productsChip.innerHTML = '';
+    }
+    els.productTrack.scrollLeft = 0;
+    updateProdArrows();
+  }
+
+  function renderCategoryTiles() {
+    els.categoryGrid.innerHTML = CATEGORIES.map(function (c) {
+      return '<li><button class="cat-tile" type="button" data-cat="' + escapeHtml(c.name) + '">' +
+        '<img class="cat-tile__img" loading="lazy" decoding="async" width="200" height="200" src="' + placeholderImage(c.name, c.icon, false) + '" alt="' + escapeHtml(c.name) + ' category">' +
+        '<span class="cat-tile__name">' + escapeHtml(c.name) + '</span>' +
+      '</button></li>';
+    }).join('');
+  }
+
+  function renderBrandStrip() {
+    els.brandStrip.innerHTML = BRANDS.map(function (b) {
+      var crown = b === 'Crown Chemical';
+      return '<li class="' + (crown ? 'is-crown' : '') + '">' + escapeHtml(b) + '</li>';
+    }).join('');
+  }
+
+  function renderMegaList() {
+    var cats = ['Cleaning Chemicals', 'Crown Chemical Brand', 'Paper Products', 'Garbage Bags & Liners',
+      'Skin Care & Hand Hygiene', 'Karcher Equipment', 'Floor Machines', 'Wipers & Microfiber',
+      'Safety Supplies', 'Shipping Supplies', 'Dispensers', 'Monthly Specials'];
+    els.megaList.innerHTML = cats.map(function (c) {
+      return '<li><a href="#products" data-cat="' + escapeHtml(c) + '">' + escapeHtml(c) + '</a></li>';
+    }).join('');
+  }
+
+  /* Product carousel arrows */
+  function updateProdArrows() {
+    var t = els.productTrack;
+    if (t.classList.contains('is-grid')) { els.prodPrev.hidden = true; els.prodNext.hidden = true; return; }
+    var max = t.scrollWidth - t.clientWidth - 2;
+    els.prodPrev.hidden = t.scrollLeft <= 2;
+    els.prodNext.hidden = t.scrollLeft >= max;
+  }
+  function scrollProducts(dir) {
+    var amount = Math.min(els.productTrack.clientWidth * 0.9, 520);
+    els.productTrack.scrollBy({ left: dir * amount, behavior: prefersReduced ? 'auto' : 'smooth' });
+  }
+
+  /* ===============================================================
+     QUOTE CART
+     =============================================================== */
+  var quote = {}; // id -> qty
+
+  function quoteCountTotal() {
+    return Object.keys(quote).reduce(function (n, id) { return n + quote[id]; }, 0);
+  }
+  function findProduct(id) {
+    for (var i = 0; i < SAMPLE_PRODUCTS.length; i++) { if (SAMPLE_PRODUCTS[i].id === id) return SAMPLE_PRODUCTS[i]; }
+    return null;
+  }
+  function updateQuoteBadge() {
+    var n = quoteCountTotal();
+    els.quoteCount.textContent = n;
+    els.openQuote.setAttribute('aria-label', 'Open quote cart, ' + n + ' item' + (n === 1 ? '' : 's'));
+    els.quotePanelCount.textContent = '(' + n + ')';
+    els.submitQuote.disabled = n === 0;
+    // bump animation
+    els.quoteCount.classList.add('is-bump');
+    setTimeout(function () { els.quoteCount.classList.remove('is-bump'); }, 160);
+  }
+
+  function addToQuote(id) {
+    var p = findProduct(id); if (!p) return;
+    quote[id] = (quote[id] || 0) + 1;
+    updateQuoteBadge();
+    renderQuotePanel();
+    showToast('Added “' + p.name + '” to your quote');
+  }
+  function setQty(id, qty) {
+    if (qty <= 0) { delete quote[id]; } else { quote[id] = qty; }
+    updateQuoteBadge();
+    renderQuotePanel();
+  }
+
+  function renderQuotePanel() {
+    var ids = Object.keys(quote);
+    if (ids.length === 0) {
+      els.quoteBody.innerHTML =
+        '<div class="q-empty">' +
+          '<svg viewBox="0 0 24 24" width="56" height="56" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 002 1.6h7.7a2 2 0 002-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.6" fill="currentColor"/><circle cx="18" cy="20" r="1.6" fill="currentColor"/></svg>' +
+          '<p>Your quote request is empty.</p>' +
+          '<button class="btn btn--primary" type="button" data-close-overlay data-scroll="#products">Browse best sellers</button>' +
+        '</div>';
+      return;
+    }
+    els.quoteBody.innerHTML = ids.map(function (id) {
+      var p = findProduct(id); var qty = quote[id];
+      return '<div class="q-item">' +
+        '<img class="q-item__img" src="' + placeholderImage(p.name, p.icon, p.crown) + '" alt="" loading="lazy">' +
+        '<div class="q-item__main">' +
+          '<p class="q-item__name">' + escapeHtml(p.name) + '</p>' +
+          '<p class="q-item__meta">' + escapeHtml(p.brand) + (p.sizes ? ' · ' + escapeHtml(p.sizes[0]) : '') + '</p>' +
+          '<div class="q-item__controls">' +
+            '<span class="stepper">' +
+              '<button type="button" data-dec="' + id + '" aria-label="Decrease quantity of ' + escapeHtml(p.name) + '">−</button>' +
+              '<span aria-live="polite">' + qty + '</span>' +
+              '<button type="button" data-inc="' + id + '" aria-label="Increase quantity of ' + escapeHtml(p.name) + '">+</button>' +
+            '</span>' +
+            '<button class="q-item__remove" type="button" data-remove="' + id + '">Remove</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function submitQuoteRequest() {
+    if (quoteCountTotal() === 0) return;
+    quote = {};
+    updateQuoteBadge();
+    els.quoteBody.innerHTML =
+      '<div class="q-empty">' +
+        '<svg viewBox="0 0 24 24" width="56" height="56" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="none" stroke="#0a7d33" stroke-width="1.8"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#0a7d33" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '<p><strong>Thanks, we’ll be in touch!</strong></p>' +
+        '<p style="font-size:13px">Your quote request was received. A Roy Turk rep will follow up with pricing &amp; availability. <br>(Prototype — nothing was actually sent.)</p>' +
+        '<button class="btn btn--outline" type="button" data-close-overlay>Keep browsing</button>' +
+      '</div>';
+    showToast('Quote request submitted — thanks!');
+  }
+
+  /* ===============================================================
+     LIVE SEARCH
+     =============================================================== */
+  function bucketMatch(p, bucket) { return bucket === 'All' || (p.buckets || []).indexOf(bucket) !== -1; }
+
+  function searchMatches(query, bucket) {
+    var q = query.trim().toLowerCase();
+    if (!q) return [];
+    return SAMPLE_PRODUCTS.filter(function (p) {
+      if (!bucketMatch(p, bucket)) return false;
+      var hay = (p.name + ' ' + p.brand + ' ' + p.category + ' ' + (p.tags || []).join(' ')).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+
+  function highlight(text, query) {
+    var q = query.trim();
+    if (!q) return escapeHtml(text);
+    var idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return escapeHtml(text);
+    return escapeHtml(text.slice(0, idx)) + '<mark>' + escapeHtml(text.slice(idx, idx + q.length)) + '</mark>' + escapeHtml(text.slice(idx + q.length));
+  }
+
+  var activeResult = -1;
+  function renderSearch() {
+    var query = els.searchInput.value;
+    var bucket = els.searchCat.value;
+    activeResult = -1;
+    if (!query.trim()) { closeSearch(); return; }
+    var matches = searchMatches(query, bucket);
+    var html;
+    if (matches.length === 0) {
+      html = '<p class="search__empty">No products match “' + escapeHtml(query.trim()) + '”.<br>Try “soap”, “paper”, “Kärcher” or “winter”.</p>';
+    } else {
+      html = matches.slice(0, 7).map(function (p, i) {
+        return '<button class="search__result" type="button" role="option" data-result="' + p.id + '" data-index="' + i + '">' +
+          '<img src="' + placeholderImage(p.name, p.icon, p.crown) + '" alt="" loading="lazy">' +
+          '<span><span class="search__result-name">' + highlight(p.name, query) + '</span><br>' +
+          '<span class="search__result-meta">' + escapeHtml(p.brand + ' · ' + p.category) + '</span></span>' +
+        '</button>';
+      }).join('');
+      html += '<button class="search__viewall" type="button" id="searchViewAll">See all ' + matches.length + ' result' + (matches.length === 1 ? '' : 's') + ' →</button>';
+    }
+    els.searchResults.innerHTML = html;
+    els.searchResults.hidden = false;
+    els.searchInput.setAttribute('aria-expanded', 'true');
+  }
+  function closeSearch() {
+    els.searchResults.hidden = true;
+    els.searchResults.innerHTML = '';
+    els.searchInput.setAttribute('aria-expanded', 'false');
+    activeResult = -1;
+  }
+  function commitSearch() {
+    var query = els.searchInput.value.trim();
+    if (!query) return;
+    applyProductView({ type: 'search', query: query, bucket: els.searchCat.value });
+    closeSearch();
+    smoothScrollTo('#products');
+  }
+  function moveActive(delta) {
+    var items = els.searchResults.querySelectorAll('.search__result');
+    if (!items.length) return;
+    activeResult = (activeResult + delta + items.length) % items.length;
+    items.forEach(function (it, i) { it.classList.toggle('is-active', i === activeResult); if (i === activeResult) it.scrollIntoView({ block: 'nearest' }); });
+  }
+
+  /* ===============================================================
+     HERO CAROUSEL
+     =============================================================== */
+  var heroSlides = Array.prototype.slice.call(document.querySelectorAll('.hero__slide'));
+  var heroIndex = 0, heroTimer = null;
+
+  function buildHeroDots() {
+    var frag = '';
+    for (var i = 0; i < heroSlides.length; i++) {
+      frag += '<button type="button" role="tab" aria-label="Go to slide ' + (i + 1) + '" data-hero-dot="' + i + '"' + (i === 0 ? ' aria-selected="true"' : ' aria-selected="false"') + '></button>';
+    }
+    els.heroDots.innerHTML = frag;
+  }
+  function showHero(i) {
+    heroIndex = (i + heroSlides.length) % heroSlides.length;
+    heroSlides.forEach(function (s, idx) {
+      var on = idx === heroIndex;
+      s.hidden = !on;
+      s.classList.toggle('is-active', on);
+    });
+    var dots = els.heroDots.querySelectorAll('[data-hero-dot]');
+    dots.forEach(function (d, idx) { d.setAttribute('aria-selected', idx === heroIndex ? 'true' : 'false'); });
+  }
+  function nextHero() { showHero(heroIndex + 1); }
+  function startHero() {
+    if (prefersReduced || heroSlides.length < 2) return;
+    stopHero();
+    heroTimer = setInterval(nextHero, 6000);
+  }
+  function stopHero() { if (heroTimer) { clearInterval(heroTimer); heroTimer = null; } }
+  function resetHero() { stopHero(); startHero(); }
+
+  /* ===============================================================
+     OVERLAYS (mega menu / quote panel / modal) — single active
+     =============================================================== */
+  var activeOverlay = null, lastFocused = null;
+  function focusable(el) {
+    return Array.prototype.slice.call(el.querySelectorAll(
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+    )).filter(function (n) { return n.offsetParent !== null || n === document.activeElement; });
+  }
+  function trapTab(e) {
+    if (e.key !== 'Tab' || !activeOverlay) return;
+    var f = focusable(activeOverlay);
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  function openOverlay(el, trigger) {
+    if (activeOverlay === el) return;
+    if (activeOverlay) closeOverlay(true);
+    lastFocused = trigger || document.activeElement;
+    el.hidden = false; els.backdrop.hidden = false;
+    requestAnimationFrame(function () { els.backdrop.classList.add('is-open'); el.classList.add('is-open'); });
+    document.body.style.overflow = 'hidden';
+    activeOverlay = el;
+    if (trigger && trigger.setAttribute) trigger.setAttribute('aria-expanded', 'true');
+    el._trigger = trigger || null;
+    var f = focusable(el); if (f.length) f[0].focus();
+    document.addEventListener('keydown', trapTab);
+  }
+  function closeOverlay(skipFocus) {
+    var el = activeOverlay; if (!el) return;
+    el.classList.remove('is-open'); els.backdrop.classList.remove('is-open');
+    document.removeEventListener('keydown', trapTab);
+    var trig = el._trigger;
+    if (trig && trig.setAttribute) trig.setAttribute('aria-expanded', 'false');
+    setTimeout(function () { el.hidden = true; if (!activeOverlay) els.backdrop.hidden = true; }, 220);
+    document.body.style.overflow = '';
+    activeOverlay = null;
+    if (!skipFocus && lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  /* ===============================================================
+     MODAL (quote request form)
+     =============================================================== */
+  function openModal(trigger) {
+    els.quoteForm.hidden = false;
+    els.modalSuccess.hidden = true;
+    els.quoteForm.reset();
+    clearErrors();
+    openOverlay(els.modal, trigger);
+  }
+  function clearErrors() {
+    els.quoteForm.querySelectorAll('.field').forEach(function (f) { f.classList.remove('is-invalid'); });
+    els.quoteForm.querySelectorAll('.field__error').forEach(function (e) { e.textContent = ''; });
+  }
+  function setError(id, msg) {
+    var input = $('#' + id);
+    var field = input.closest('.field');
+    field.classList.add('is-invalid');
+    $('#' + id + 'Err').textContent = msg;
+    input.setAttribute('aria-invalid', 'true');
+  }
+  function validateQuoteForm() {
+    clearErrors();
+    var ok = true, firstBad = null;
+    var name = $('#qName'), company = $('#qCompany'), email = $('#qEmail'), msg = $('#qMessage');
+    if (!name.value.trim()) { setError('qName', 'Please enter your name.'); ok = false; firstBad = firstBad || name; }
+    if (!company.value.trim()) { setError('qCompany', 'Please enter your company.'); ok = false; firstBad = firstBad || company; }
+    if (!email.value.trim()) { setError('qEmail', 'Please enter your email.'); ok = false; firstBad = firstBad || email; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { setError('qEmail', 'Please enter a valid email.'); ok = false; firstBad = firstBad || email; }
+    if (!msg.value.trim()) { setError('qMessage', 'Tell us what you need a quote on.'); ok = false; firstBad = firstBad || msg; }
+    if (!ok && firstBad) firstBad.focus();
+    return ok;
+  }
+
+  /* ===============================================================
+     SMOOTH SCROLL with sticky-header offset
+     =============================================================== */
+  function headerHeight() { return els.header ? els.header.offsetHeight : 0; }
+  function smoothScrollTo(sel) {
+    var target = document.querySelector(sel);
+    if (!target) return;
+    var top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight() - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: prefersReduced ? 'auto' : 'smooth' });
+  }
+  function setHeaderVar() {
+    document.documentElement.style.setProperty('--header-h', headerHeight() + 'px');
+  }
+
+  /* ===============================================================
+     EVENT WIRING
+     =============================================================== */
+  function init() {
+    renderCategoryTiles();
+    renderBrandStrip();
+    renderMegaList();
+    buildHeroDots();
+    showHero(0);
+    startHero();
+    applyProductView({ type: 'best' });
+    updateQuoteBadge();
+    renderQuotePanel();
+    setHeaderVar();
+
+    /* ---- Global click delegation ---- */
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+
+      // open quote-request modal
+      var modalTrig = t.closest('[data-open-modal]');
+      if (modalTrig) { e.preventDefault(); openModal(modalTrig); return; }
+
+      // simple toast links (disabled prototype features)
+      var toastEl = t.closest('[data-toast]');
+      if (toastEl) { e.preventDefault(); showToast(toastEl.getAttribute('data-toast')); return; }
+
+      // category / nav filter links
+      var catEl = t.closest('[data-cat]');
+      if (catEl) {
+        e.preventDefault();
+        var cat = catEl.getAttribute('data-cat');
+        var href = catEl.getAttribute('href') || '#products';
+        applyProductView({ type: 'category', cat: cat });
+        if (activeOverlay) closeOverlay(true);
+        smoothScrollTo(href);
+        return;
+      }
+
+      // generic close-overlay buttons (inside panels)
+      if (t.closest('[data-close-overlay]')) {
+        var sc = t.closest('[data-close-overlay]').getAttribute('data-scroll');
+        closeOverlay();
+        if (sc) setTimeout(function () { smoothScrollTo(sc); }, 260);
+        return;
+      }
+
+      // in-page anchors (smooth scroll)
+      var anchor = t.closest('a[href^="#"]');
+      if (anchor) {
+        var hash = anchor.getAttribute('href');
+        if (hash.length > 1) {
+          e.preventDefault();
+          if (activeOverlay) closeOverlay(true);
+          smoothScrollTo(hash);
+        }
+        return;
+      }
+    });
+
+    /* ---- Add to quote (delegated) ---- */
+    els.productTrack.addEventListener('click', function (e) {
+      var add = e.target.closest('[data-add]');
+      if (add) addToQuote(add.getAttribute('data-add'));
+    });
+
+    /* ---- Clear product filter ---- */
+    els.productsChip.addEventListener('click', function (e) {
+      if (e.target.id === 'clearFilter') applyProductView({ type: 'best' });
+    });
+
+    /* ---- Quote panel controls (delegated) ---- */
+    els.quoteBody.addEventListener('click', function (e) {
+      var inc = e.target.closest('[data-inc]'); var dec = e.target.closest('[data-dec]'); var rm = e.target.closest('[data-remove]');
+      if (inc) { var id = inc.getAttribute('data-inc'); setQty(id, (quote[id] || 0) + 1); }
+      else if (dec) { var id2 = dec.getAttribute('data-dec'); setQty(id2, (quote[id2] || 0) - 1); }
+      else if (rm) { setQty(rm.getAttribute('data-remove'), 0); }
+    });
+    els.submitQuote.addEventListener('click', submitQuoteRequest);
+
+    /* ---- Quote panel open/close ---- */
+    els.openQuote.addEventListener('click', function () { openOverlay(els.quotePanel, els.openQuote); });
+    els.openQuoteFooter.addEventListener('click', function () { openOverlay(els.quotePanel, els.openQuoteFooter); });
+    els.quoteClose.addEventListener('click', function () { closeOverlay(); });
+
+    /* ---- Mega menu ---- */
+    els.openMenu.addEventListener('click', function () { openOverlay(els.megaMenu, els.openMenu); });
+    els.openMenuMobile.addEventListener('click', function () { openOverlay(els.megaMenu, els.openMenuMobile); });
+    els.megaClose.addEventListener('click', function () { closeOverlay(); });
+
+    /* ---- Backdrop + Escape ---- */
+    els.backdrop.addEventListener('click', function () { closeOverlay(); });
+    els.modal.addEventListener('click', function (e) { if (e.target === els.modal) closeOverlay(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (!els.searchResults.hidden) { closeSearch(); return; }
+        if (activeOverlay) closeOverlay();
+      }
+    });
+
+    /* ---- Modal close / done ---- */
+    els.modalClose.addEventListener('click', function () { closeOverlay(); });
+    els.modalDone.addEventListener('click', function () { closeOverlay(); });
+    els.quoteForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!validateQuoteForm()) return;
+      els.quoteForm.hidden = true;
+      els.modalSuccess.hidden = false;
+      els.modalDone.focus();
+    });
+
+    /* ---- Hero carousel controls ---- */
+    els.heroPrev.addEventListener('click', function () { showHero(heroIndex - 1); resetHero(); });
+    els.heroNext.addEventListener('click', function () { showHero(heroIndex + 1); resetHero(); });
+    els.heroDots.addEventListener('click', function (e) {
+      var dot = e.target.closest('[data-hero-dot]');
+      if (dot) { showHero(parseInt(dot.getAttribute('data-hero-dot'), 10)); resetHero(); }
+    });
+    els.heroViewport.addEventListener('mouseenter', stopHero);
+    els.heroViewport.addEventListener('mouseleave', startHero);
+    els.heroViewport.addEventListener('focusin', stopHero);
+    els.heroViewport.addEventListener('focusout', startHero);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stopHero(); else startHero(); });
+
+    /* ---- Product carousel arrows ---- */
+    els.prodPrev.addEventListener('click', function () { scrollProducts(-1); });
+    els.prodNext.addEventListener('click', function () { scrollProducts(1); });
+    var prodTick = false;
+    els.productTrack.addEventListener('scroll', function () {
+      if (prodTick) return; prodTick = true;
+      requestAnimationFrame(function () { updateProdArrows(); prodTick = false; });
+    });
+
+    /* ---- Search ---- */
+    var searchDebounce;
+    els.searchInput.addEventListener('input', function () {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(renderSearch, 120);
+    });
+    els.searchCat.addEventListener('change', function () { if (els.searchInput.value.trim()) renderSearch(); });
+    els.searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
+      else if (e.key === 'Enter') {
+        var items = els.searchResults.querySelectorAll('.search__result');
+        if (activeResult >= 0 && items[activeResult]) { e.preventDefault(); items[activeResult].click(); }
+        // else: let the form submit handler run
+      }
+    });
+    els.searchForm.addEventListener('submit', function (e) { e.preventDefault(); commitSearch(); });
+    els.searchResults.addEventListener('click', function (e) {
+      var res = e.target.closest('[data-result]');
+      if (res) {
+        els.searchInput.value = findProduct(res.getAttribute('data-result')).name;
+        commitSearch();
+        return;
+      }
+      if (e.target.id === 'searchViewAll') commitSearch();
+    });
+    // close search dropdown on outside click
+    document.addEventListener('click', function (e) {
+      if (!els.searchForm.contains(e.target)) closeSearch();
+    });
+
+    /* ---- Back to top ---- */
+    els.backToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' }); });
+
+    /* ---- Sticky header state + measurements ---- */
+    var stuckTick = false;
+    window.addEventListener('scroll', function () {
+      if (stuckTick) return; stuckTick = true;
+      requestAnimationFrame(function () {
+        els.header.classList.toggle('is-stuck', window.scrollY > 4);
+        stuckTick = false;
+      });
+    }, { passive: true });
+    window.addEventListener('resize', function () { setHeaderVar(); updateProdArrows(); });
+    window.addEventListener('load', setHeaderVar);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>
