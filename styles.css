@@ -236,9 +236,9 @@ input, select, textarea { font: inherit; }
 }
 .catnav__all:hover { background: rgba(255,255,255,.06); border-bottom-color: var(--red); }
 .catnav__list { flex: 1 1 auto; display: flex; align-items: stretch; min-width: 0; }
-.catnav__list li { flex: 1 1 auto; display: flex; }
+.catnav__list li { flex: 1 0 auto; display: flex; }
 .catnav__list a {
-  flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; text-align: center;
+  flex: 1 0 auto; display: inline-flex; align-items: center; justify-content: center; text-align: center;
   padding: 15px clamp(6px, .7vw, 14px); border-bottom: 3px solid transparent;
   font-family: var(--display); font-size: clamp(12.5px, 1.02vw, 15px); font-weight: 600; letter-spacing: .6px; text-transform: uppercase;
   white-space: nowrap; color: #eef1f4; line-height: 1.2; transition: background .18s ease, border-color .18s ease, color .18s ease;
@@ -247,17 +247,11 @@ input, select, textarea { font: inherit; }
 .catnav__crown { color: #ff9a8e !important; }
 .catnav__special { background: var(--red); border-bottom-color: var(--red-dark) !important; }
 .catnav__special:hover { background: var(--red-dark) !important; }
-.catnav__phone {
-  flex: 0 0 auto; display: none; align-items: center; gap: 7px;
-  font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: .5px; color: #fff; white-space: nowrap; padding: 15px clamp(10px, 1vw, 16px);
-}
-.catnav__phone:hover { color: #ff9a8e; }
 /* progressive disclosure — extra categories always remain in the "All" flyout menu */
 .catnav__list .nav-t2, .catnav__list .nav-t3, .catnav__list .nav-t4 { display: none; }
-@media (min-width: 1140px) { .catnav__list .nav-t2 { display: flex; } }
-@media (min-width: 1280px) { .catnav__phone { display: inline-flex; } }
-@media (min-width: 1340px) { .catnav__list .nav-t3 { display: flex; } }
-@media (min-width: 1520px) { .catnav__list .nav-t4 { display: flex; } }
+@media (min-width: 1120px) { .catnav__list .nav-t2 { display: flex; } }
+@media (min-width: 1320px) { .catnav__list .nav-t3 { display: flex; } }
+@media (min-width: 1480px) { .catnav__list .nav-t4 { display: flex; } }
 
 /* =================================================================
    HERO — dark textured carousel
