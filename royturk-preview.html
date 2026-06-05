@@ -984,50 +984,6 @@ input, select, textarea { font: inherit; }
       </section>
 
       <!-- ============================================================= -->
-      <!-- 7. BRAND LOGO STRIP                                           -->
-      <!-- ============================================================= -->
-      <section class="brand-strip" aria-label="Brands we carry">
-        <h2 class="brand-strip__title">Trusted brands we stock &amp; service</h2>
-        <ul class="brand-strip__list" id="brandStrip"><!-- populated by app.js --></ul>
-      </section>
-
-      <!-- ============================================================= -->
-      <!-- 8. TRUST / VALUE PROPS BAND                                   -->
-      <!-- ============================================================= -->
-      <section class="trust" id="trust" aria-label="Why buy from Roy Turk">
-        <div class="trust__col">
-          <span class="trust__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 21.4 6.8 18.1l1-5.8L3.5 8.2l5.9-.9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </span>
-          <h3 class="trust__head">Since 1968</h3>
-          <p class="trust__copy">Family-owned, 55+ years serving the GTA.</p>
-        </div>
-        <div class="trust__col">
-          <span class="trust__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-          </span>
-          <h3 class="trust__head">Free Next-Day Delivery</h3>
-          <p class="trust__copy">Across the Greater Toronto Area.</p>
-        </div>
-        <div class="trust__col">
-          <span class="trust__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 7l8-4 8 4-8 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7v8l8 4 8-4V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </span>
-          <h3 class="trust__head">3,600+ Products</h3>
-          <p class="trust__copy">One-stop shop for facility maintenance.</p>
-        </div>
-        <div class="trust__col">
-          <span class="trust__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M14.7 6.3a4 4 0 00-5.4 5.4l-6 6 2 2 6-6a4 4 0 005.4-5.4l-2.7 2.7-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </span>
-          <h3 class="trust__head">Expert Support</h3>
-          <p class="trust__copy">Equipment service, repairs &amp; product advice.</p>
-        </div>
-      </section>
-
-      <!-- Crown Chemical spotlight relocated to just above the footer -->
-
-      <!-- ============================================================= -->
       <!-- 10. SHOP BY CATEGORY tile grid                                -->
       <!-- ============================================================= -->
       <section class="panel categories" id="categories" aria-labelledby="catHeading">
@@ -1079,6 +1035,45 @@ input, select, textarea { font: inherit; }
             <rect x="40" y="186" width="280" height="10" fill="#c7ccd0"/>
             <text x="180" y="224" text-anchor="middle" font-size="13" fill="#7a8087" font-family="sans-serif">Crown Chemical blending &amp; packaging</text>
           </svg>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- BRAND LOGO STRIP + TRUST BAND (moved below the Crown spotlight) -->
+      <!-- ============================================================= -->
+      <section class="brand-strip" aria-label="Brands we carry">
+        <h2 class="brand-strip__title">Trusted brands we stock &amp; service</h2>
+        <ul class="brand-strip__list" id="brandStrip"><!-- populated by app.js --></ul>
+      </section>
+
+      <section class="trust" id="trust" aria-label="Why buy from Roy Turk">
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 21.4 6.8 18.1l1-5.8L3.5 8.2l5.9-.9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">Since 1968</h3>
+          <p class="trust__copy">Family-owned, 55+ years serving the GTA.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </span>
+          <h3 class="trust__head">Free Next-Day Delivery</h3>
+          <p class="trust__copy">Across the Greater Toronto Area.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 7l8-4 8 4-8 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7v8l8 4 8-4V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">3,600+ Products</h3>
+          <p class="trust__copy">One-stop shop for facility maintenance.</p>
+        </div>
+        <div class="trust__col">
+          <span class="trust__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M14.7 6.3a4 4 0 00-5.4 5.4l-6 6 2 2 6-6a4 4 0 005.4-5.4l-2.7 2.7-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="trust__head">Expert Support</h3>
+          <p class="trust__copy">Equipment service, repairs &amp; product advice.</p>
         </div>
       </section>
     </div>
